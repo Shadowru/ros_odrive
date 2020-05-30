@@ -255,7 +255,7 @@ int main(int argc, char **argv) {
     // Initialize ROS node
     ros::init(argc, argv, "ros_odrive"); // Initializes Node Name
     ros::NodeHandle nh("~");
-    ros::Rate r(10);
+    ros::Rate r(50);
     nh.param<std::string>("od_sn", od_sn, "0x00000000");
     nh.param<std::string>("od_cfg", od_cfg, "");
 
