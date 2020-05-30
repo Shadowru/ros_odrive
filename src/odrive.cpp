@@ -139,7 +139,7 @@ void velCallback(const geometry_msgs::Twist &vel) {
 
     cmd = "axis1.controller.vel_setpoint";
     writeOdriveData(endpoint, odrive_json,
-                    cmd, -1 * fval);
+                    cmd, -fval);
 }
 
 /**
