@@ -77,7 +77,7 @@ void msgCallback(const ros_odrive::odrive_ctrl::ConstPtr &msg) {
 
 int publishOdometry(ros::Publisher odrive_odometry, ros_odrive::odrive_msg status_message) {
 
-    delta delta_enc_left = status_message.vel0 - enc_left_last;
+    float delta_enc_left = status_message.vel0 - enc_left_last;
     float delta_enc_right = status_message.vel1 - enc_right_last;
 
     double distance_local = (delta_enc_left + delta_enc_right) / 2;
