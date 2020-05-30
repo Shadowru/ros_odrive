@@ -8,6 +8,8 @@
     <url type="website">http://www.ioko.eu/</url>
     <author email="ioko@ioko.eu">Ioannis Kokkoris</author>
 
+    <depend package="tf"/>
+    <depend package="nav_msgs"/>
     <build_depend>message_generation</build_depend>
     <buildtool_depend>catkin</buildtool_depend>
     <build_depend>roscpp</build_depend>
