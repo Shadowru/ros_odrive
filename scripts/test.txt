@@ -10,3 +10,7 @@ rostopic pub -1 /ros_odrive/odrive_ctrl_0x335831593536 ros_odrive/odrive_ctrl --
 
 
 rosrun teleop_twist_keyboard teleop_twist_keyboard.py /cmd_vel:=/ros_odrive/cmd_vel
+
+
+
+roslaunch rtabmap_ros rtabmap.launch rtabmap_args:="--delete_db_on_start" rtabmapviz:=false rviz:=true

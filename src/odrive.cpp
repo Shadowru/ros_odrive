@@ -153,8 +153,8 @@ void velCallback(const geometry_msgs::Twist &vel) {
     left_diff = rotation_speed * angle_multiplier;
     right_diff = left_diff;
 
-    left += left_diff;
-    right += right_diff;
+    left -= left_diff;
+    right -= right_diff;
 
     cmd = "axis0.controller.vel_setpoint";
     writeOdriveData(endpoint, odrive_json,
