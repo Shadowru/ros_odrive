@@ -17,9 +17,6 @@ double x;
 double y;
 double th;
 
-tf::TransformBroadcaster odom_broadcaster;
-
-
 void msgCallback(const ros_odrive::odrive_ctrl::ConstPtr &msg) {
     std::string cmd;
     uint8_t u8val;
@@ -76,6 +73,8 @@ void msgCallback(const ros_odrive::odrive_ctrl::ConstPtr &msg) {
 }
 
 int publishOdometry(ros::Publisher odrive_odometry, ros_odrive::odrive_msg status_message) {
+
+    tf::TransformBroadcaster odom_broadcaster;
 
     float delta_enc_left = status_message.vel0 - enc_left_last;
     float delta_enc_right = status_message.vel1 - enc_right_last;
