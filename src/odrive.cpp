@@ -157,7 +157,7 @@ int main(int argc, char **argv) {
     ros::Subscriber odrive_sub = nh.subscribe("odrive_ctrl_" + od_sn, 10, msgCallback);
 
     //
-    ros::Subscriber <geometry_msgs::Twist> odrive_cmd_vel= nh.subscribe("cmd_vel", 10, velCallback);
+    ros::Subscriber odrive_cmd_vel= nh.subscribe("cmd_vel", 10, velCallback);
 
     // Get odrive endpoint instance
     endpoint = new odrive_endpoint();
