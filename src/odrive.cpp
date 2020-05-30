@@ -92,15 +92,15 @@ int publishOdometry(ros::Publisher odrive_odometry, ros_odrive::odrive_msg statu
     if(distance_local != 0){
         double x_local = cos(th_local) * distance_local;
         double y_local = -sin(th_local) * distance_local;
-        x = x + (cos(th) * x_local - sin(th) * y_local);
-        y = y + (sin(th) * x_local + cos(th) * y_local);
+        this.x = this.x + (cos(this.th) * x_local - sin(this.th) * y_local);
+        this.y = this.y + (sin(this.th) * x_local + cos(this.th) * y_local);
     }
     if(th != 0){
-        th = th + th_local;
+        this.th = this.th + th_local;
     }
 
     //since all odometry is 6DOF we'll need a quaternion created from yaw
-    geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromYaw(th);
+    geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromYaw(this.th);
 
     geometry_msgs::TransformStamped odom_trans;
     odom_trans.header.stamp = current_time;
