@@ -132,11 +132,27 @@ void velCallback(const geometry_msgs::Twist &vel) {
     float fval;
     float left;
     float right;
+    float rotation_speed;
+    const float multiplier = 1.8 / 45;
+    float left_diff;
+    float right_diff;
+
+    //assume twist in m/s
 
     fval = (vel.linear.x * 90) / 1.5;
 
     left = fval;
     right = -fval;
+
+    //assume radians/s
+
+    rotation_speed = angular.z;
+
+    left_diff = rotation_speed * multiplier;
+    right_diff = - left_diff;
+
+    left += left_diff;
+    right += right_diff;
 
     cmd = "axis0.controller.vel_setpoint";
     writeOdriveData(endpoint, odrive_json,
