@@ -297,10 +297,11 @@ int odrive_endpoint::init(uint64_t serialNumber)
         if (desc.idVendor == ODRIVE_USB_VENDORID && desc.idProduct == ODRIVE_USB_PRODUCTID) {
 
 	    libusb_device_handle *device_handle;
-            if (libusb_open(device, &device_handle) != LIBUSB_SUCCESS) {
-                ROS_ERROR("* Error opeening USB device");
+            int usb_retcode = libusb_open(device, &device_handle);
+	        if (usb_retcode != LIBUSB_SUCCESS) {
+                ROS_ERROR("* Error opening USB device (%x)", usb_retcode);
                 continue;
-	    }
+	        }
 
 	    struct libusb_config_descriptor *config;
 	    result = libusb_get_config_descriptor(device, 0, &config);
