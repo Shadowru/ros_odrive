@@ -95,7 +95,7 @@ int publishOdometry(ros::Publisher odrive_odometry, ros_odrive::odrive_msg statu
         global_x = global_x + (cos(global_th) * x_local - sin(global_th) * y_local);
         global_y = global_y + (sin(global_th) * x_local + cos(global_th) * y_local);
     }
-    if(th != 0){
+    if(th_local != 0){
         global_th = global_th + th_local;
     }
 
