@@ -13,9 +13,9 @@ float enc_right_last;
 
 ros::Time current_time, last_time;
 
-double x;
-double y;
-double th;
+double global_x;
+double global_y;
+double global_th;
 
 void msgCallback(const ros_odrive::odrive_ctrl::ConstPtr &msg) {
     std::string cmd;
@@ -92,11 +92,11 @@ int publishOdometry(ros::Publisher odrive_odometry, ros_odrive::odrive_msg statu
     if(distance_local != 0){
         double x_local = cos(th_local) * distance_local;
         double y_local = -sin(th_local) * distance_local;
-        this.x = this.x + (cos(this.th) * x_local - sin(this.th) * y_local);
-        this.y = this.y + (sin(this.th) * x_local + cos(this.th) * y_local);
+        global_x = global_x + (cos(global_th) * x_local - sin(global_th) * y_local);
+        global_y = global_y + (sin(global_th) * x_local + cos(global_th) * y_local);
     }
     if(th != 0){
-        this.th = this.th + th_local;
+        global_th = global_th + th_local;
     }
 
     //since all odometry is 6DOF we'll need a quaternion created from yaw
