@@ -1,0 +1,3 @@
+rostopic echo /ros_odrive/odrive_msg_0x335831593536
+
+rostopic hz /ros_odrive/odrive_msg_0x335831593536

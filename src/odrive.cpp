@@ -138,7 +138,7 @@ int main(int argc, char **argv) {
     // Initialize ROS node
     ros::init(argc, argv, "ros_odrive"); // Initializes Node Name
     ros::NodeHandle nh("~");
-    ros::Rate r(1);
+    ros::Rate r(10);
     nh.param<std::string>("od_sn", od_sn, "0x00000000");
     nh.param<std::string>("od_cfg", od_cfg, "");
 
@@ -182,8 +182,8 @@ int main(int argc, char **argv) {
         publishMessage(odrive_pub);
 
         // update watchdog
-        execOdriveFunc(endpoint, odrive_json, "axis0.watchdog_feed");
-        execOdriveFunc(endpoint, odrive_json, "axis1.watchdog_feed");
+        //execOdriveFunc(endpoint, odrive_json, "axis0.watchdog_feed");
+        //execOdriveFunc(endpoint, odrive_json, "axis1.watchdog_feed");
 
         // idle loop
         r.sleep();
