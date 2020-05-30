@@ -266,7 +266,7 @@ int main(int argc, char **argv) {
         return 1;
     }
     ros::Publisher odrive_pub = nh.advertise<ros_odrive::odrive_msg>("odrive_msg_" + od_sn, 100);
-    ros::Publisher odrive_odometry = nh.advertise<ros_odrive::odrive_msg>("odometry", 100);
+    ros::Publisher odrive_odometry = nh.advertise<nav_msgs::Odometry>("odometry", 100);
     ros::Subscriber odrive_sub = nh.subscribe("odrive_ctrl", 10, msgCallback);
 
     //
