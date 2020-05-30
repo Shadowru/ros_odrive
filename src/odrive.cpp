@@ -6,6 +6,20 @@ Json::Value odrive_json;
 bool targetJsonValid = false;
 odrive_endpoint *endpoint = NULL;
 
+float base_width;
+
+float enc_left_last;
+float enc_right_last;
+
+ros::Time current_time, last_time;
+
+double x;
+double y;
+double th;
+
+tf::TransformBroadcaster odom_broadcaster;
+
+
 void msgCallback(const ros_odrive::odrive_ctrl::ConstPtr &msg) {
     std::string cmd;
     uint8_t u8val;
@@ -61,6 +75,68 @@ void msgCallback(const ros_odrive::odrive_ctrl::ConstPtr &msg) {
     }
 }
 
+int publishOdometry(ros::Publisher odrive_odometry, ros_odrive::odrive_msg status_message) {
+
+    delta delta_enc_left = status_message.vel0 - enc_left_last;
+    float delta_enc_right = status_message.vel1 - enc_right_last;
+
+    double distance_local = (delta_enc_left + delta_enc_right) / 2;
+    double th_local = (delta_enc_right - delta_enc_right) / base_width;
+
+    # calculate velocities
+
+    double dt = (current_time - last_time).toSec();
+
+    double distance_m_per_s = distance_local / dt;
+    double dr_per_s = th_local / dt;
+
+    if(distance_local != 0){
+        double x_local = cos(th_local) * distance_local;
+        double y_local = -sin(th_local) * distance_local;
+        x = x + (cos(th) * x_local - sin(th) * y_local);
+        y = y + (sin(th) * x_local + cos(th) * y_local);
+    }
+    if(th != 0){
+        th = th + th_local;
+    }
+
+    //since all odometry is 6DOF we'll need a quaternion created from yaw
+    geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromYaw(th);
+
+    geometry_msgs::TransformStamped odom_trans;
+    odom_trans.header.stamp = current_time;
+    odom_trans.header.frame_id = "odom";
+    odom_trans.child_frame_id = "base_link";
+
+    odom_trans.transform.translation.x = x;
+    odom_trans.transform.translation.y = y;
+    odom_trans.transform.translation.z = 0.0;
+    odom_trans.transform.rotation = odom_quat;
+
+//send the transform
+    odom_broadcaster.sendTransform(odom_trans);
+
+    //next, we'll publish the odometry message over ROS
+    nav_msgs::Odometry odom;
+    odom.header.stamp = current_time;
+    odom.header.frame_id = "odom";
+
+    //set the position
+    odom.pose.pose.position.x = x;
+    odom.pose.pose.position.y = y;
+    odom.pose.pose.position.z = 0.0;
+    odom.pose.pose.orientation = odom_quat;
+
+    //set the velocity
+    odom.child_frame_id = "base_link";
+    odom.twist.twist.linear.x = distance_m_per_s;
+    odom.twist.twist.linear.y = 0.0;
+    odom.twist.twist.angular.z = dr_per_s;
+
+    //publish the message
+    odom_pub.publish(odrive_odometry);
+}
+
 /**
  *
  * Publise odrive message to ROS
@@ -70,7 +146,7 @@ void msgCallback(const ros_odrive::odrive_ctrl::ConstPtr &msg) {
  * return ODRIVE_OK in success
  *
  */
-int publishMessage(ros::Publisher odrive_pub) {
+ros_odrive::odrive_msg publishMessage(ros::Publisher odrive_pub) {
     uint16_t u16val;
     uint8_t u8val;
     float fval;
@@ -121,7 +197,7 @@ int publishMessage(ros::Publisher odrive_pub) {
     // Publish message
     odrive_pub.publish(msg);
 
-    return ODRIVE_OK;
+    return msg;
 }
 
 void velCallback(const geometry_msgs::Twist &vel) {
@@ -139,7 +215,7 @@ void velCallback(const geometry_msgs::Twist &vel) {
     float right_diff;
 
     //assume twist in m/s
-    // 10.5 wheel have 1.5 m per rotate
+    //10.5R wheel have 1.5 m per rotate
 
     fval = vel.linear.x * linear_multiplier;
 
@@ -191,10 +267,11 @@ int main(int argc, char **argv) {
         return 1;
     }
     ros::Publisher odrive_pub = nh.advertise<ros_odrive::odrive_msg>("odrive_msg_" + od_sn, 100);
+    ros::Publisher odrive_odometry = nh.advertise<ros_odrive::odrive_msg>("odometry", 100);
     ros::Subscriber odrive_sub = nh.subscribe("odrive_ctrl", 10, msgCallback);
 
     //
-    ros::Subscriber odrive_cmd_vel= nh.subscribe("cmd_vel", 10, velCallback);
+    ros::Subscriber odrive_cmd_vel = nh.subscribe("cmd_vel", 10, velCallback);
 
     // Get odrive endpoint instance
     endpoint = new odrive_endpoint();
@@ -219,15 +296,28 @@ int main(int argc, char **argv) {
         updateTargetConfig(endpoint, odrive_json, od_cfg);
     }
 
+    enc_left_last = 0;
+    enc_right_last = 0;
+
+    //test robot width
+    base_width = 0.58;
+
+    current_time = ros::Time::now();
+    last_time = ros::Time::now();
+
     // Example loop - reading values and updating motor velocity
     ROS_INFO("Starting idle loop");
     while (ros::ok()) {
         // Publish status message
+        current_time = ros::Time::now();
         publishMessage(odrive_pub);
 
+        publishOdometry(odrive_odometry, msg);
+        last_time = current_time;
+
         // update watchdog
-        execOdriveFunc(endpoint, odrive_json, "axis0.watchdog_feed");
-        execOdriveFunc(endpoint, odrive_json, "axis1.watchdog_feed");
+        //execOdriveFunc(endpoint, odrive_json, "axis0.watchdog_feed");
+        //execOdriveFunc(endpoint, odrive_json, "axis1.watchdog_feed");
 
         // idle loop
         r.sleep();
