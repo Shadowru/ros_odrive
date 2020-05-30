@@ -79,8 +79,8 @@ int publishOdometry(ros::Publisher odrive_odometry, ros_odrive::odrive_msg statu
     float delta_enc_left = status_message.vel0 - enc_left_last;
     float delta_enc_right = status_message.vel1 - enc_right_last;
 
-    double distance_local = (delta_enc_left + delta_enc_right) / 2;
-    double th_local = (delta_enc_right - delta_enc_right) / base_width;
+    double distance_local = ((delta_enc_left + delta_enc_right) / 2) / 90;
+    double th_local = ((delta_enc_right - delta_enc_right) / 90) / base_width;
 
     //calculate velocities
 
