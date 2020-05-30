@@ -182,8 +182,8 @@ int main(int argc, char **argv) {
         publishMessage(odrive_pub);
 
         // update watchdog
-        //execOdriveFunc(endpoint, odrive_json, "axis0.watchdog_feed");
-        //execOdriveFunc(endpoint, odrive_json, "axis1.watchdog_feed");
+        execOdriveFunc(endpoint, odrive_json, "axis0.watchdog_feed");
+        execOdriveFunc(endpoint, odrive_json, "axis1.watchdog_feed");
 
         // idle loop
         r.sleep();
