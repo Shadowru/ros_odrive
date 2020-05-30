@@ -37,7 +37,7 @@ class odrive{
 
     private:
         void msgCallback(const ros_odrive::odrive_ctrl::ConstPtr& msg);
-
+        void velCallback(const geometry_msgs::Twist &vel);
     public:
 
 };
