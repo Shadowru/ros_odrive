@@ -100,15 +100,15 @@ int publishOdometry(ros::Publisher odrive_odometry, ros_odrive::odrive_msg statu
     }
 
     //since all odometry is 6DOF we'll need a quaternion created from yaw
-    geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromYaw(this.th);
+    geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromYaw(global_th);
 
     geometry_msgs::TransformStamped odom_trans;
     odom_trans.header.stamp = current_time;
     odom_trans.header.frame_id = "odom";
     odom_trans.child_frame_id = "base_link";
 
-    odom_trans.transform.translation.x = x;
-    odom_trans.transform.translation.y = y;
+    odom_trans.transform.translation.x = global_x;
+    odom_trans.transform.translation.y = global_y;
     odom_trans.transform.translation.z = 0.0;
     odom_trans.transform.rotation = odom_quat;
 
