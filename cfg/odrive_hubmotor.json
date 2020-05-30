@@ -46,7 +46,7 @@
     },
     {
         "name":"odrv0.axis0.encoder.config.ignore_illegal_hall_state",
-        "type":"Boolean",
+        "type":"bool",
         "value":true
     },
     {
@@ -123,7 +123,7 @@
     },
     {
         "name":"odrv0.axis.encoder.config.ignore_illegal_hall_state",
-        "type":"Boolean",
+        "type":"bool",
         "value":true
     },
     {
