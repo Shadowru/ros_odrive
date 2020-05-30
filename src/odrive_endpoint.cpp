@@ -299,7 +299,7 @@ int odrive_endpoint::init(uint64_t serialNumber)
 	    libusb_device_handle *device_handle;
             int usb_retcode = libusb_open(device, &device_handle);
 	        if (usb_retcode != LIBUSB_SUCCESS) {
-                ROS_ERROR("* Error opening USB device (%x)", usb_retcode);
+                ROS_ERROR("* Error opening USB device (0x%x)", usb_retcode);
                 continue;
 	        }
 
