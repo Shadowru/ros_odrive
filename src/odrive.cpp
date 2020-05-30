@@ -146,7 +146,7 @@ void velCallback(const geometry_msgs::Twist &vel) {
 
     //assume radians/s
 
-    rotation_speed = angular.z;
+    rotation_speed = vel.angular.z;
 
     left_diff = rotation_speed * multiplier;
     right_diff = - left_diff;
