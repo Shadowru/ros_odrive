@@ -133,7 +133,7 @@ void velCallback(const geometry_msgs::Twist &vel) {
     float left;
     float right;
     float rotation_speed;
-    const float multiplier = 1.8 / 45;
+    const float multiplier = 90 / M_PI;
     float left_diff;
     float right_diff;
 
