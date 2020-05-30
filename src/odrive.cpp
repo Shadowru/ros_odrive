@@ -124,6 +124,10 @@ int publishMessage(ros::Publisher odrive_pub) {
     return ODRIVE_OK;
 }
 
+void velCallback(const geometry_msgs::Twist &vel) {
+    ROS_INFO("Vel callback");
+}
+
 /**
  *
  * Node main function
@@ -151,6 +155,9 @@ int main(int argc, char **argv) {
     }
     ros::Publisher odrive_pub = nh.advertise<ros_odrive::odrive_msg>("odrive_msg_" + od_sn, 100);
     ros::Subscriber odrive_sub = nh.subscribe("odrive_ctrl_" + od_sn, 10, msgCallback);
+
+    //
+    ros::Subscriber <geometry_msgs::Twist> odrive_cmd_vel= nh.subscribe("cmd_vel", 10, velCallback);
 
     // Get odrive endpoint instance
     endpoint = new odrive_endpoint();

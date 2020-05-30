@@ -1,3 +1,9 @@
+./src/ros_odrive/scripts/test_odrive.sh
+
+
 rostopic echo /ros_odrive/odrive_msg_0x335831593536
 
 rostopic hz /ros_odrive/odrive_msg_0x335831593536
+
+
+rostopic pub -1 /ros_odrive/odrive_ctrl_0x335831593536 ros_odrive/odrive_ctrl -- [3, 0, 50.0]
