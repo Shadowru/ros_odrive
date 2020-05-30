@@ -125,7 +125,18 @@ int publishMessage(ros::Publisher odrive_pub) {
 }
 
 void velCallback(const geometry_msgs::Twist &vel) {
-    ROS_INFO("Vel callback");
+
+    std::string cmd;
+    uint8_t u8val;
+    uint16_t u16val;
+    float fval;
+
+    fval = (vel.linear.x * 90) / 1.5;
+
+    writeOdriveData(endpoint, odrive_json,
+                    "axis0.controller.vel_setpoint"), fval);
+    writeOdriveData(endpoint, odrive_json,
+                    "axis1.controller.vel_setpoint"), fval);
 }
 
 /**
@@ -157,7 +168,7 @@ int main(int argc, char **argv) {
     ros::Subscriber odrive_sub = nh.subscribe("odrive_ctrl", 10, msgCallback);
 
     //
-    //ros::Subscriber odrive_cmd_vel= nh.subscribe("cmd_vel", 10, velCallback);
+    ros::Subscriber odrive_cmd_vel= nh.subscribe("cmd_vel", 10, velCallback);
 
     // Get odrive endpoint instance
     endpoint = new odrive_endpoint();
