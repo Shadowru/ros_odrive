@@ -143,8 +143,8 @@ void velCallback(const geometry_msgs::Twist &vel) {
 
     fval = vel.linear.x * linear_multiplier;
 
-    left = fval;
-    right = -fval;
+    left = -fval;
+    right = fval;
 
     //assume radians/s
 
