@@ -168,23 +168,24 @@ ros_odrive::odrive_msg publishMessage(ros::Publisher odrive_pub) {
     readOdriveData(endpoint, odrive_json,
                    string("axis1.encoder.vel_estimate"), fval);
     msg.vel1 = fval;
-    readOdriveData(endpoint, odrive_json,
-                   string("axis0.encoder.pos_estimate"), fval);
+    fval = 0.0;
+    //readOdriveData(endpoint, odrive_json,
+    //               string("axis0.encoder.pos_estimate"), fval);
     msg.pos0 = fval;
-    readOdriveData(endpoint, odrive_json,
-                   string("axis1.encoder.pos_estimate"), fval);
+    //readOdriveData(endpoint, odrive_json,
+    //               string("axis1.encoder.pos_estimate"), fval);
     msg.pos1 = fval;
-    readOdriveData(endpoint, odrive_json,
-                   string("axis0.motor.current_meas_phB"), fval);
+    //readOdriveData(endpoint, odrive_json,
+    //               string("axis0.motor.current_meas_phB"), fval);
     msg.curr0B = fval;
-    readOdriveData(endpoint, odrive_json,
-                   string("axis0.motor.current_meas_phC"), fval);
+    //readOdriveData(endpoint, odrive_json,
+    //               string("axis0.motor.current_meas_phC"), fval);
     msg.curr0C = fval;
-    readOdriveData(endpoint, odrive_json,
-                   string("axis1.motor.current_meas_phB"), fval);
+    //readOdriveData(endpoint, odrive_json,
+    //               string("axis1.motor.current_meas_phB"), fval);
     msg.curr1B = fval;
-    readOdriveData(endpoint, odrive_json,
-                   string("axis1.motor.current_meas_phC"), fval);
+    //readOdriveData(endpoint, odrive_json,
+    //               string("axis1.motor.current_meas_phC"), fval);
     msg.curr1C = fval;
     execOdriveGetTemp(endpoint, odrive_json,
                       string("axis0.motor.get_inverter_temp"), fval);
