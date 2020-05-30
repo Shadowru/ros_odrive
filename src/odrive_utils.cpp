@@ -33,18 +33,24 @@ int updateTargetConfig(odrive_endpoint *endpoint, Json::Value odrive_json, strin
                 return ODRIVE_ERROR;
             }
         }
+        ROS_INFO("Calibrate AXIS0...");
         if (calibrateAxis0(endpoint, odrive_json) != ODRIVE_OK) {
             ROS_ERROR("Error calibrating axis 0!");
             return ODRIVE_ERROR;
         }
+        ROS_INFO("Done.");
+        ROS_INFO("Calibrate AXIS1...");
         if (calibrateAxis1(endpoint, odrive_json) != ODRIVE_OK) {
             ROS_ERROR("Error calibrating axis 1!");
             return ODRIVE_ERROR;
         }
+        ROS_INFO("Done.");
+        ROS_INFO("Saving configuration...");
         if (execOdriveFunc(endpoint, odrive_json, "save_configuration") != ODRIVE_OK) {
             ROS_ERROR("Error saving configuration!");
             return ODRIVE_ERROR;
         }
+        ROS_INFO("Done.");
     } else {
         ROS_ERROR("Error opening configuration file!");
         return ODRIVE_ERROR;

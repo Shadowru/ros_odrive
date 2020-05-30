@@ -9,11 +9,10 @@ using namespace std;
  * initialize USB library and local variables  
  *
  */
-odrive_endpoint::odrive_endpoint()
-{
+odrive_endpoint::odrive_endpoint() {
 
     if (libusb_init(&libusb_context_) != LIBUSB_SUCCESS) {
-	ROS_ERROR("* Error initializing USB!");
+        ROS_ERROR("* Error initializing USB!");
     }
 }
 
@@ -23,12 +22,11 @@ odrive_endpoint::odrive_endpoint()
  * release USB library
  *
  */
-odrive_endpoint::~odrive_endpoint()
-{
+odrive_endpoint::~odrive_endpoint() {
 
     if (libusb_context_ != NULL) {
         libusb_exit(libusb_context_);
-	libusb_context_ = NULL;
+        libusb_context_ = NULL;
     }
 }
 
@@ -39,8 +37,7 @@ odrive_endpoint::~odrive_endpoint()
  * @param value data to append
  *
  */
-void odrive_endpoint::appendShortToCommBuffer(commBuffer& buf, const short value) 
-{
+void odrive_endpoint::appendShortToCommBuffer(commBuffer &buf, const short value) {
     buf.push_back((value >> 0) & 0xFF);
     buf.push_back((value >> 8) & 0xFF);
 }
@@ -52,8 +49,7 @@ void odrive_endpoint::appendShortToCommBuffer(commBuffer& buf, const short value
  * @param value data to append
  *
  */
-void odrive_endpoint::appendIntToCommBuffer(commBuffer& buf, const int value) 
-{
+void odrive_endpoint::appendIntToCommBuffer(commBuffer &buf, const int value) {
     buf.push_back((value >> 0) & 0xFF);
     buf.push_back((value >> 8) & 0xFF);
     buf.push_back((value >> 16) & 0xFF);
@@ -69,9 +65,8 @@ void odrive_endpoint::appendIntToCommBuffer(commBuffer& buf, const int value)
  *  @return data buffer
  *
  */
-commBuffer odrive_endpoint::decodeODrivePacket(commBuffer& buf, 
-		short& seq_no, commBuffer& received_packet) 
-{
+commBuffer odrive_endpoint::decodeODrivePacket(commBuffer &buf,
+                                               short &seq_no, commBuffer &received_packet) {
     commBuffer payload;
 
     memcpy(&seq_no, &buf[0], sizeof(short));
@@ -95,15 +90,13 @@ commBuffer odrive_endpoint::decodeODrivePacket(commBuffer& buf,
  *
  */
 commBuffer odrive_endpoint::createODrivePacket(short seq_no, int endpoint_id,
-                short response_size, bool read, int address, const commBuffer& input) 
-{
+                                               short response_size, bool read, int address, const commBuffer &input) {
     commBuffer packet;
     short crc = 0;
 
     if ((endpoint_id & 0x7fff) == 0) {
         crc = ODRIVE_PROTOCOL_VERION;
-    }
-    else {
+    } else {
         crc = ODRIVE_DEFAULT_CRC_VALUE;
     }
 
@@ -132,14 +125,13 @@ commBuffer odrive_endpoint::createODrivePacket(short seq_no, int endpoint_id,
  *
  */
 template<typename T>
-int odrive_endpoint::getData(int id, T& value) 
-{
+int odrive_endpoint::getData(int id, T &value) {
     commBuffer tx;
     commBuffer rx;
     int rx_size;
 
     int result = endpointRequest(id, rx,
-                    rx_size, tx, 1 /* ACK */, sizeof(value));
+                                 rx_size, tx, 1 /* ACK */, sizeof(value));
     if (result != ODRIVE_OK) {
         return result;
     }
@@ -157,8 +149,7 @@ int odrive_endpoint::getData(int id, T& value)
  *  @return ODRIVE_OK on success
  *
  */
-int odrive_endpoint::execFunc(int endpoint_id) 
-{
+int odrive_endpoint::execFunc(int endpoint_id) {
     commBuffer tx;
     commBuffer rx;
     int rx_length;
@@ -175,14 +166,13 @@ int odrive_endpoint::execFunc(int endpoint_id)
  *
  */
 template<typename TT>
-int odrive_endpoint::setData(int endpoint_id, const TT& value) 
-{
+int odrive_endpoint::setData(int endpoint_id, const TT &value) {
     commBuffer tx;
     commBuffer rx;
     int rx_length;
 
-    for(int i = 0; i < sizeof(value); i++){
-       tx.push_back(((unsigned char*)&value)[i]);
+    for (int i = 0; i < sizeof(value); i++) {
+        tx.push_back(((unsigned char *) &value)[i]);
     }
 
     return endpointRequest(endpoint_id, rx, rx_length, tx, 1, 0);
@@ -203,13 +193,12 @@ int odrive_endpoint::setData(int endpoint_id, const TT& value)
  * @return LIBUSB_SUCCESS on success
  *
  */
-int odrive_endpoint::endpointRequest(int endpoint_id, commBuffer& received_payload, 
-		int& received_length, commBuffer payload, 
-		bool ack, int length, bool read, int address) 
-{
+int odrive_endpoint::endpointRequest(int endpoint_id, commBuffer &received_payload,
+                                     int &received_length, commBuffer payload,
+                                     bool ack, int length, bool read, int address) {
     commBuffer send_buffer;
     commBuffer receive_buffer;
-    unsigned char receive_bytes[ODRIVE_MAX_RESULT_LENGTH] = { 0 };
+    unsigned char receive_bytes[ODRIVE_MAX_RESULT_LENGTH] = {0};
     int sent_bytes = 0;
     int received_bytes = 0;
     short received_seq_no = 0;
@@ -221,17 +210,17 @@ int odrive_endpoint::endpointRequest(int endpoint_id, commBuffer& received_paylo
         endpoint_id |= 0x8000;
     }
     outbound_seq_no_ = (outbound_seq_no_ + 1) & 0x7fff;
-    outbound_seq_no_ |= LIBUSB_ENDPOINT_IN; 
+    outbound_seq_no_ |= LIBUSB_ENDPOINT_IN;
     short seq_no = outbound_seq_no_;
 
     // Create request packet
     commBuffer packet = createODrivePacket(seq_no, endpoint_id, length, read, address, payload);
 
     // Transfer paket to target
-    int result = libusb_bulk_transfer(odrive_handle_, ODRIVE_OUT_EP, 
-		    packet.data(), packet.size(), &sent_bytes, 0);
+    int result = libusb_bulk_transfer(odrive_handle_, ODRIVE_OUT_EP,
+                                      packet.data(), packet.size(), &sent_bytes, 0);
     if (result != LIBUSB_SUCCESS) {
-	ROS_ERROR("* Error in transfering data to USB!");
+        ROS_ERROR("* Error in transfering data to USB!");
         ep_lock.unlock();
         return result;
     } else if (packet.size() != sent_bytes) {
@@ -240,23 +229,23 @@ int odrive_endpoint::endpointRequest(int endpoint_id, commBuffer& received_paylo
 
     // Get responce
     if (ack) {
-        result = libusb_bulk_transfer(odrive_handle_, ODRIVE_IN_EP, 
-			receive_bytes, ODRIVE_MAX_BYTES_TO_RECEIVE, 
-			&received_bytes, ODRIVE_TIMEOUT);
+        result = libusb_bulk_transfer(odrive_handle_, ODRIVE_IN_EP,
+                                      receive_bytes, ODRIVE_MAX_BYTES_TO_RECEIVE,
+                                      &received_bytes, ODRIVE_TIMEOUT);
         if (result != LIBUSB_SUCCESS) {
             ROS_ERROR("* Error in reading data from USB!");
             ep_lock.unlock();
-    	    return result;
+            return result;
         }
 
-	// Push recevived data to buffer
+        // Push recevived data to buffer
         for (int i = 0; i < received_bytes; i++) {
             receive_buffer.push_back(receive_bytes[i]);
         }
 
         received_payload = decodeODrivePacket(receive_buffer, received_seq_no, receive_buffer);
         if (received_seq_no != seq_no) {
-	    ROS_ERROR("* Error Received data out of order");
+            ROS_ERROR("* Error Received data out of order");
         }
         received_length = received_payload.size();
     }
@@ -274,9 +263,8 @@ int odrive_endpoint::endpointRequest(int endpoint_id, commBuffer& received_paylo
  * @return ODRIVE_OK on success 
  *
  */
-int odrive_endpoint::init(uint64_t serialNumber)		
-{
-    libusb_device ** usb_device_list;
+int odrive_endpoint::init(uint64_t serialNumber) {
+    libusb_device **usb_device_list;
     int ret = 1;
 
     ssize_t device_count = libusb_get_device_list(libusb_context_, &usb_device_list);
@@ -292,55 +280,55 @@ int odrive_endpoint::init(uint64_t serialNumber)
         if (result != LIBUSB_SUCCESS) {
             ROS_ERROR("* Error getting device descriptor");
             continue;
-	}
-	/* Check USB devicei ID */
+        }
+        /* Check USB devicei ID */
         if (desc.idVendor == ODRIVE_USB_VENDORID && desc.idProduct == ODRIVE_USB_PRODUCTID) {
 
-	    libusb_device_handle *device_handle;
+            libusb_device_handle *device_handle;
             int usb_retcode = libusb_open(device, &device_handle);
-	        if (usb_retcode != LIBUSB_SUCCESS) {
+            if (usb_retcode != LIBUSB_SUCCESS) {
                 ROS_ERROR("* Error opening USB device (0x%x)", usb_retcode);
                 continue;
-	        }
+            }
 
-	    struct libusb_config_descriptor *config;
-	    result = libusb_get_config_descriptor(device, 0, &config);
+            struct libusb_config_descriptor *config;
+            result = libusb_get_config_descriptor(device, 0, &config);
             int ifNumber = 2;//config->bNumInterfaces;
 
-	    if ((libusb_kernel_driver_active(device_handle, ifNumber) != LIBUSB_SUCCESS) && 
-		(libusb_detach_kernel_driver(device_handle, ifNumber) != LIBUSB_SUCCESS)) {
+            if ((libusb_kernel_driver_active(device_handle, ifNumber) != LIBUSB_SUCCESS) &&
+                (libusb_detach_kernel_driver(device_handle, ifNumber) != LIBUSB_SUCCESS)) {
                 ROS_ERROR("* Driver error");
-		libusb_close(device_handle);
-		continue;
-	    }
-	    
-	    if ((result = libusb_claim_interface(device_handle, ifNumber)) !=  LIBUSB_SUCCESS) {
+                libusb_close(device_handle);
+                continue;
+            }
+
+            if ((result = libusb_claim_interface(device_handle, ifNumber)) != LIBUSB_SUCCESS) {
                 ROS_ERROR("* Error claiming device");
                 libusb_close(device_handle);
-		continue;
+                continue;
             } else {
-		bool attached_to_handle = false;
+                bool attached_to_handle = false;
                 unsigned char buf[128];
 
-                result = libusb_get_string_descriptor_ascii(device_handle, desc.iSerialNumber, 
-				buf, 127);
-		if (result <= 0) {
+                result = libusb_get_string_descriptor_ascii(device_handle, desc.iSerialNumber,
+                                                            buf, 127);
+                if (result <= 0) {
                     ROS_ERROR("* Error getting data");
                     result = libusb_release_interface(device_handle, ifNumber);
-		    libusb_close(device_handle);
+                    libusb_close(device_handle);
                     continue;
-		} else {
+                } else {
                     std::stringstream stream;
                     stream << uppercase << std::hex << serialNumber;
                     std::string sn(stream.str());
 
-		    if (sn.compare(0, strlen((const char*)buf), (const char*)buf) == 0) {
-                        ROS_INFO("Device 0x%8.8lX Found", serialNumber); 
+                    if (sn.compare(0, strlen((const char *) buf), (const char *) buf) == 0) {
+                        ROS_INFO("Device 0x%8.8lX Found", serialNumber);
                         odrive_handle_ = device_handle;
                         attached_to_handle = true;
-			ret = ODRIVE_OK;
-			break;
-                    }		    
+                        ret = ODRIVE_OK;
+                        break;
+                    }
                 }
                 if (!attached_to_handle) {
                     result = libusb_release_interface(device_handle, ifNumber);
@@ -361,8 +349,7 @@ int odrive_endpoint::init(uint64_t serialNumber)
  * close ODrive dvice
  *
  */
-void odrive_endpoint::remove(void)
-{
+void odrive_endpoint::remove(void) {
     if (odrive_handle_ != NULL) {
         libusb_release_interface(odrive_handle_, 2);
         libusb_close(odrive_handle_);
@@ -370,21 +357,35 @@ void odrive_endpoint::remove(void)
     }
 }
 
-template int odrive_endpoint::getData(int, bool&);
-template int odrive_endpoint::getData(int, short&);
-template int odrive_endpoint::getData(int, int&);
-template int odrive_endpoint::getData(int, float&);
-template int odrive_endpoint::getData(int, uint8_t&);
-template int odrive_endpoint::getData(int, uint16_t&);
-template int odrive_endpoint::getData(int, uint32_t&);
-template int odrive_endpoint::getData(int, uint64_t&);
+template int odrive_endpoint::getData(int, bool &);
 
-template int odrive_endpoint::setData(int, const bool&);
-template int odrive_endpoint::setData(int, const short&);
-template int odrive_endpoint::setData(int, const int&);
-template int odrive_endpoint::setData(int, const float&);
-template int odrive_endpoint::setData(int, const uint8_t&);
-template int odrive_endpoint::setData(int, const uint16_t&);
-template int odrive_endpoint::setData(int, const uint32_t&);
-template int odrive_endpoint::setData(int, const uint64_t&);
+template int odrive_endpoint::getData(int, short &);
+
+template int odrive_endpoint::getData(int, int &);
+
+template int odrive_endpoint::getData(int, float &);
+
+template int odrive_endpoint::getData(int, uint8_t &);
+
+template int odrive_endpoint::getData(int, uint16_t &);
+
+template int odrive_endpoint::getData(int, uint32_t &);
+
+template int odrive_endpoint::getData(int, uint64_t &);
+
+template int odrive_endpoint::setData(int, const bool &);
+
+template int odrive_endpoint::setData(int, const short &);
+
+template int odrive_endpoint::setData(int, const int &);
+
+template int odrive_endpoint::setData(int, const float &);
+
+template int odrive_endpoint::setData(int, const uint8_t &);
+
+template int odrive_endpoint::setData(int, const uint16_t &);
+
+template int odrive_endpoint::setData(int, const uint32_t &);
+
+template int odrive_endpoint::setData(int, const uint64_t &);
 
