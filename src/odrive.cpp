@@ -130,16 +130,21 @@ void velCallback(const geometry_msgs::Twist &vel) {
     uint8_t u8val;
     uint16_t u16val;
     float fval;
+    float left;
+    float right;
 
     fval = (vel.linear.x * 90) / 1.5;
 
+    left = fval;
+    right = -fval;
+
     cmd = "axis0.controller.vel_setpoint";
     writeOdriveData(endpoint, odrive_json,
-                    cmd, fval);
+                    cmd, right);
 
     cmd = "axis1.controller.vel_setpoint";
     writeOdriveData(endpoint, odrive_json,
-                    cmd, -fval);
+                    cmd, left);
 }
 
 /**
