@@ -121,8 +121,8 @@ int publishOdometry(ros::Publisher odrive_odometry, ros_odrive::odrive_msg statu
     odom.header.frame_id = "odom";
 
     //set the position
-    odom.pose.pose.position.x = x;
-    odom.pose.pose.position.y = y;
+    odom.pose.pose.position.x = global_x;
+    odom.pose.pose.position.y = global_y;
     odom.pose.pose.position.z = 0.0;
     odom.pose.pose.orientation = odom_quat;
 
