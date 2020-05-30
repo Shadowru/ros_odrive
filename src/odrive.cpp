@@ -83,7 +83,7 @@ int publishOdometry(ros::Publisher odrive_odometry, ros_odrive::odrive_msg statu
     double distance_local = (delta_enc_left + delta_enc_right) / 2;
     double th_local = (delta_enc_right - delta_enc_right) / base_width;
 
-    # calculate velocities
+    //calculate velocities
 
     double dt = (current_time - last_time).toSec();
 
@@ -113,7 +113,7 @@ int publishOdometry(ros::Publisher odrive_odometry, ros_odrive::odrive_msg statu
     odom_trans.transform.translation.z = 0.0;
     odom_trans.transform.rotation = odom_quat;
 
-//send the transform
+    //send the transform
     odom_broadcaster.sendTransform(odom_trans);
 
     //next, we'll publish the odometry message over ROS
