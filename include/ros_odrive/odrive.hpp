@@ -18,6 +18,8 @@
 
 #include "ros/ros.h"
 #include "geometry_msgs/Twist.h"
+#include <tf/transform_broadcaster.h>
+#include <nav_msgs/Odometry.h>
 #include "ros_odrive/odrive_endpoint.hpp"
 #include "ros_odrive/odrive_utils.hpp"
 #include "ros_odrive/odrive_enums.hpp"
