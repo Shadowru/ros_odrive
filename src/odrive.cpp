@@ -114,7 +114,7 @@ int publishOdometry(ros::Publisher odrive_odometry, ros_odrive::odrive_msg statu
     odom_trans.transform.rotation = odom_quat;
 
     //send the transform
-    odom_broadcaster.sendTransform(odom_trans);
+    odom_broadcaster->sendTransform(odom_trans);
 
     //next, we'll publish the odometry message over ROS
     nav_msgs::Odometry odom;
