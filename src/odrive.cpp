@@ -133,13 +133,15 @@ void velCallback(const geometry_msgs::Twist &vel) {
     float left;
     float right;
     float rotation_speed;
-    const float multiplier = 90 / M_PI;
+    const float linear_multiplier = 90 / 1.5;
+    const float angle_multiplier = 90 / M_PI;
     float left_diff;
     float right_diff;
 
     //assume twist in m/s
+    // 10.5 wheel have 1.5 m per rotate
 
-    fval = (vel.linear.x * 90) / 1.5;
+    fval = vel.linear.x * linear_multiplier;
 
     left = fval;
     right = -fval;
@@ -148,8 +150,8 @@ void velCallback(const geometry_msgs::Twist &vel) {
 
     rotation_speed = vel.angular.z;
 
-    left_diff = rotation_speed * multiplier;
-    right_diff = - left_diff;
+    left_diff = rotation_speed * angle_multiplier;
+    right_diff = left_diff;
 
     left += left_diff;
     right += right_diff;
