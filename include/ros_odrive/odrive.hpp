@@ -16,11 +16,11 @@
 #include <fstream>
 
 #include "ros/ros.h"
+#include "geometry_msgs/Twist.h"
 #include "ros_odrive/odrive_endpoint.hpp"
 #include "ros_odrive/odrive_utils.hpp"
 #include "ros_odrive/odrive_enums.hpp"
 #include <jsoncpp/json/json.h>
-#include "geometry_msgs/Twist.h"
 
 #define ODRIVE_OK    0
 #define ODRIVE_ERROR 1
