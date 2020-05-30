@@ -134,7 +134,7 @@ int publishOdometry(ros::Publisher odrive_odometry, ros_odrive::odrive_msg statu
     odom.twist.twist.angular.z = dr_per_s;
 
     //publish the message
-    odom_pub.publish(odrive_odometry);
+    odrive_odometry.publish(odom);
 }
 
 /**
