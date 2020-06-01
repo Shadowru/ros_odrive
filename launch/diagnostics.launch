@@ -1,10 +1,4 @@
 <launch>
     <node name="computer_diagnostics" pkg="diagnostic_common_diagnostics" type="sensors_monitor.py">
     </node>
-    <node pkg="diagnostic_aggregator" type="aggregator_node"
-          name="diagnostic_aggregator" >
-        <!-- Load the file you made above -->
-        <rosparam command="load"
-                  file="$(find ros_odrive)/cfg/analyzers.yaml" />
-    </node>
 </launch>
