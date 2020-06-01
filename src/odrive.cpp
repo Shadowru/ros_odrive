@@ -241,6 +241,14 @@ void velCallback(const geometry_msgs::Twist &vel) {
                     cmd, left);
 }
 
+void odrive_diagnostics(diagnostic_updater::DiagnosticStatusWrapper &stat){
+    float fval;
+
+    readOdriveData(endpoint, odrive_json, string("vbus_voltage"), fval);
+
+    stat.summary(diagnostic_msgs::DiagnosticStatus::OK);
+    stat.add("Voltage", fval);
+}
 /**
  *
  * Node main function
@@ -266,12 +274,16 @@ int main(int argc, char **argv) {
         ROS_ERROR("Failed to get sn parameter %s!", od_sn.c_str());
         return 1;
     }
-    ros::Publisher odrive_pub = nh.advertise<ros_odrive::odrive_msg>("odrive_msg_" + od_sn, 100);
-    ros::Publisher odrive_odometry = nh.advertise<nav_msgs::Odometry>("odometry", 100);
+    //ros::Publisher odrive_pub = nh.advertise<ros_odrive::odrive_msg>("odrive_msg_" + od_sn, 100);
+    //ros::Publisher odrive_odometry = nh.advertise<nav_msgs::Odometry>("odometry", 100);
     ros::Subscriber odrive_sub = nh.subscribe("odrive_ctrl", 10, msgCallback);
 
-    //
     ros::Subscriber odrive_cmd_vel = nh.subscribe("cmd_vel", 10, velCallback);
+
+    diagnostic_updater::Updater odrive_diagnostics_updater;
+    odrive_diagnostics_updater.setHardwareID("ODRIVE S/N: %s", od_sn.c_str());
+
+    updater.add("ODRIVE stat updater", odrive_diagnostics);
 
     // Get odrive endpoint instance
     endpoint = new odrive_endpoint();
@@ -310,7 +322,7 @@ int main(int argc, char **argv) {
     while (ros::ok()) {
         // Publish status message
         current_time = ros::Time::now();
-        publishOdometry(odrive_odometry, publishMessage(odrive_pub));
+        //publishOdometry(odrive_odometry, publishMessage(odrive_pub));
         last_time = current_time;
 
         // update watchdog
