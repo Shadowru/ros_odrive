@@ -8,6 +8,7 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   std_msgs
   tf
+  diagnostic_updater
 )
 
 find_package(Boost REQUIRED COMPONENTS system)

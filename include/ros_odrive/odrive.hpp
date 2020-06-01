@@ -25,6 +25,10 @@
 #include "ros_odrive/odrive_enums.hpp"
 #include <jsoncpp/json/json.h>
 
+#include <diagnostic_updater/diagnostic_updater.h>
+#include <std_msgs/Bool.h>
+#include <diagnostic_updater/publisher.h>
+
 #define ODRIVE_OK    0
 #define ODRIVE_ERROR 1
 
