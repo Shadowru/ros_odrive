@@ -244,10 +244,17 @@ void velCallback(const geometry_msgs::Twist &vel) {
 void odrive_diagnostics(diagnostic_updater::DiagnosticStatusWrapper &stat){
     float fval;
 
-    readOdriveData(endpoint, odrive_json, string("vbus_voltage"), fval);
-
     stat.summary(diagnostic_msgs::DiagnosticStatus::OK, "Odrive nominal");
+
+    readOdriveData(endpoint, odrive_json, string("vbus_voltage"), fval);
     stat.add("Voltage", fval);
+
+    readOdriveData(endpoint, odrive_json, string("axis0.motor.current_control.Iq_measured"), fval);
+    stat.add("Axis 0 Current", fval);
+
+    readOdriveData(endpoint, odrive_json, string("axis1.motor.current_control.Iq_measured"), fval);
+    stat.add("Axis 0 Current", fval);
+
 }
 /**
  *
@@ -283,7 +290,7 @@ int main(int argc, char **argv) {
     diagnostic_updater::Updater odrive_diagnostics_updater;
     odrive_diagnostics_updater.setHardwareIDf("ODRIVE S/N: %s", od_sn.c_str());
 
-    odrive_diagnostics_updater.add("ODRIVE stat updater", odrive_diagnostics);
+    odrive_diagnostics_updater.add("ODRIVE", odrive_diagnostics);
 
     // Get odrive endpoint instance
     endpoint = new odrive_endpoint();
