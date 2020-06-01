@@ -1,4 +1,4 @@
 <launch>
-    <node name="computer_diagnostics" pkg="diagnostic_common_diagnostics" type="sensors_monitor.py">
-    </node>
+    <node name="mainboard" pkg="diagnostic_common_diagnostics" type="sensors_monitor.py"/>
+    <node name="cpu" pkg="diagnostic_common_diagnostics" type="cpu_monitor.py"/>
 </launch>
