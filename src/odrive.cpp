@@ -285,11 +285,6 @@ int main(int argc, char **argv) {
 
     odrive_diagnostics_updater.add("ODRIVE stat updater", odrive_diagnostics);
 
-    double min_freq = 1; // If you update these values, the
-    double max_freq = 20; // HeaderlessTopicDiagnostic will use the new values.
-    diagnostic_updater::HeaderlessTopicDiagnostic pub1_freq("odrive", odrive_diagnostics_updater,
-        diagnostics_updater::FrequencyStatusParam(&min_freq, &max_freq, 0.1, 10));
-
     // Get odrive endpoint instance
     endpoint = new odrive_endpoint();
 
@@ -337,7 +332,7 @@ int main(int argc, char **argv) {
         // idle loop
         r.sleep();
         ros::spinOnce();
-        updater.update();
+        odrive_diagnostics_updater.update();
     }
 
     endpoint->remove();
