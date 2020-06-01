@@ -246,7 +246,7 @@ void odrive_diagnostics(diagnostic_updater::DiagnosticStatusWrapper &stat){
 
     readOdriveData(endpoint, odrive_json, string("vbus_voltage"), fval);
 
-    stat.summary(diagnostic_msgs::DiagnosticStatus::OK);
+    stat.summary(diagnostic_msgs::DiagnosticStatus::OK, "Odrive nominal");
     stat.add("Voltage", fval);
 }
 /**
@@ -283,7 +283,7 @@ int main(int argc, char **argv) {
     diagnostic_updater::Updater odrive_diagnostics_updater;
     odrive_diagnostics_updater.setHardwareID("ODRIVE S/N: %s", od_sn.c_str());
 
-    updater.add("ODRIVE stat updater", odrive_diagnostics);
+    odrive_diagnostics_updater.add("ODRIVE stat updater", odrive_diagnostics);
 
     double min_freq = 1; // If you update these values, the
     double max_freq = 20; // HeaderlessTopicDiagnostic will use the new values.
