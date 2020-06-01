@@ -281,14 +281,14 @@ int main(int argc, char **argv) {
     ros::Subscriber odrive_cmd_vel = nh.subscribe("cmd_vel", 10, velCallback);
 
     diagnostic_updater::Updater odrive_diagnostics_updater;
-    odrive_diagnostics_updater.setHardwareID("ODRIVE S/N: %s", od_sn.c_str());
+    odrive_diagnostics_updater.setHardwareIDf("ODRIVE S/N: %s", od_sn.c_str());
 
     odrive_diagnostics_updater.add("ODRIVE stat updater", odrive_diagnostics);
 
     double min_freq = 1; // If you update these values, the
     double max_freq = 20; // HeaderlessTopicDiagnostic will use the new values.
-    diagnostic_updater::HeaderlessTopicDiagnostic pub1_freq("odrive", updater,
-        odrive_diagnostics_updater::FrequencyStatusParam(&min_freq, &max_freq, 0.1, 10));
+    diagnostic_updater::HeaderlessTopicDiagnostic pub1_freq("odrive", odrive_diagnostics_updater,
+        diagnostics_updater::FrequencyStatusParam(&min_freq, &max_freq, 0.1, 10));
 
     // Get odrive endpoint instance
     endpoint = new odrive_endpoint();
