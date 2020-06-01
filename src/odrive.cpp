@@ -319,6 +319,7 @@ int main(int argc, char **argv) {
 
     // Example loop - reading values and updating motor velocity
     ROS_INFO("Starting idle loop");
+    int diagnostics_barrier = 0;
     while (ros::ok()) {
         // Publish status message
         current_time = ros::Time::now();
@@ -332,7 +333,10 @@ int main(int argc, char **argv) {
         // idle loop
         r.sleep();
         ros::spinOnce();
-        odrive_diagnostics_updater.update();
+        if(diagnostics_barrier++ > 10) {
+            odrive_diagnostics_updater.update();
+            diagnostics_barrier = 0;
+        }
     }
 
     endpoint->remove();
