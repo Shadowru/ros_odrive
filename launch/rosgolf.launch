@@ -2,5 +2,8 @@
   <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch" >
     <arg name="port" value="8080"/>
   </include>
+  <include file="$(find rplidar_ros)/launch/rplidar.launch"/>
+  <include file="$(find hector_slam_launch)/launch/tutorial.launch"/>
   <node name="ros_odrive" pkg="ros_odrive" type="ros_odrive" />
+
 </launch>
