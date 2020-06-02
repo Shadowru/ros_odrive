@@ -7,6 +7,7 @@ bool targetJsonValid = false;
 odrive_endpoint *endpoint = NULL;
 
 float base_width;
+float wheel_radius;
 
 float left_encoder;
 float right_encoder;
@@ -113,32 +114,16 @@ void velCallback(const geometry_msgs::Twist &vel) {
     std::string cmd;
     uint8_t u8val;
     uint16_t u16val;
-    float fval;
-    float left;
-    float right;
-    float rotation_speed;
-    const float linear_multiplier = 90 / 1.5;
-    const float angle_multiplier = 90 / M_PI;
-    float left_diff;
-    float right_diff;
 
-    //assume twist in m/s
-    //10.5R wheel have 1.5 m per rotate
+    float v = vel.linear.x;
+    float w = vel.angular.z;
 
-    fval = vel.linear.x * linear_multiplier;
+    // m per sec
+    float vr = ((2.0 * v) + (w * base_width)) / (2.0 * wheel_radius)
+    float vl = ((2.0 * v) + (-1.0 * w * base_width)) / (2.0 * wheel_radius);
 
-    left = -fval;
-    right = fval;
-
-    //assume radians/s
-
-    rotation_speed = vel.angular.z;
-
-    left_diff = rotation_speed * angle_multiplier;
-    right_diff = left_diff;
-
-    left -= left_diff;
-    right -= right_diff;
+    float right = 90 * vr;
+    float left = 90 * vl;
 
     cmd = "axis0.controller.vel_setpoint";
     writeOdriveData(endpoint, odrive_json,
@@ -186,8 +171,12 @@ int main(int argc, char **argv) {
     // Initialize ROS node
     ros::init(argc, argv, "ros_odrive"); // Initializes Node Name
     ros::NodeHandle nh("~");
+
+    nh.param("rate", rate, 10);
     ros::Rate r(10);
+
     nh.param<std::string>("od_sn", od_sn, "0x00000000");
+
     nh.param<std::string>("od_cfg", od_cfg, "");
 
     // Get device serial number
@@ -197,8 +186,15 @@ int main(int argc, char **argv) {
         ROS_ERROR("Failed to get sn parameter %s!", od_sn.c_str());
         return 1;
     }
-    //ros::Publisher odrive_pub = nh.advertise<ros_odrive::odrive_msg>("odrive_msg_" + od_sn, 100);
-    //ros::Publisher odrive_odometry = nh.advertise<nav_msgs::Odometry>("odometry", 100);
+
+    //test robot width
+    nh.param("base_width", base_width, 0.58);
+    nh.param("wheel_radius", wheel_radius, 0.235 / 2);
+
+    ros::Publisher odrive_pub = nh.advertise<ros_odrive::odrive_msg>("odrive_msg_" + od_sn, 100);
+
+    ros::Publisher odrive_odometry = nh.advertise<nav_msgs::Odometry>("odometry", 100);
+
     ros::Subscriber odrive_sub = nh.subscribe("odrive_ctrl", 10, msgCallback);
 
     ros::Subscriber odrive_cmd_vel = nh.subscribe("cmd_vel", 10, velCallback);
@@ -211,7 +207,7 @@ int main(int argc, char **argv) {
     // Get odrive endpoint instance
     endpoint = new odrive_endpoint();
 
-    // Enumarate Odrive target
+    // Enumerate Odrive target
     if (endpoint->init(stoull(od_sn, 0, 16))) {
         ROS_ERROR("Device not found!");
         return 1;
@@ -230,12 +226,6 @@ int main(int argc, char **argv) {
 
         updateTargetConfig(endpoint, odrive_json, od_cfg);
     }
-
-    enc_left_last = 0;
-    enc_right_last = 0;
-
-    //test robot width
-    base_width = 0.58;
 
     current_time = ros::Time::now();
     last_time = ros::Time::now();
