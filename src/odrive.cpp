@@ -113,7 +113,7 @@ ros_odrive::odrive_msg publishMessage(ros::Publisher odrive_pub) {
     return msg;
 }
 
-void publishOdometry(ros::Publisher odometry_pub, const ros_odrive::odrive_msg, const tf::TransformBroadcaster odom_broadcaster, const ros::Time current_time, const ros::Time last_time){
+void publishOdometry(ros::Publisher odometry_pub, const ros_odrive::odrive_msg odrive_msg, const tf::TransformBroadcaster odom_broadcaster, const ros::Time current_time, const ros::Time last_time){
     float curr_tick_right = odrive_msg.pos1;
     float curr_tick_left = odrive_msg.pos0;
 
@@ -129,7 +129,7 @@ void publishOdometry(ros::Publisher odometry_pub, const ros_odrive::odrive_msg, 
     float distance = (delta_right_wheel_in_meter + delta_left_wheel_in_meter) / 2;
 
     ros::Duration ros_time_elapsed = current_time - last_time;
-    float time_elapsed = ros_time_elapsed.to_sec();
+    float time_elapsed = ros_time_elapsed.toSec();
 
     float local_theta = ( delta_right_wheel_in_meter - delta_left_wheel_in_meter ) / base_width;
     float local_x = cos( local_theta ) * distance;
