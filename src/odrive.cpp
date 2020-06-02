@@ -123,8 +123,8 @@ void publishOdometry(ros::Publisher odometry_pub, const ros_odrive::odrive_msg o
     right_pos = curr_tick_right;
     left_pos = curr_tick_left;
 
-    float delta_right_wheel_in_meter = encoder_click_per_meter / curr_right_pos;
-    float delta_left_wheel_in_meter = encoder_click_per_meter / curr_left_pos;
+    float delta_right_wheel_in_meter = curr_right_pos / encoder_click_per_meter;
+    float delta_left_wheel_in_meter = curr_left_pos / encoder_click_per_meter;
 
     float distance = (delta_right_wheel_in_meter + delta_left_wheel_in_meter) / 2;
 
