@@ -165,6 +165,7 @@ void odrive_diagnostics(diagnostic_updater::DiagnosticStatusWrapper &stat) {
 int main(int argc, char **argv) {
     std::string od_sn;
     std::string od_cfg;
+    int rate;
 
     ROS_INFO("Starting ODrive...");
 
