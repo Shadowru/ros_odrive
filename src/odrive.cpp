@@ -6,7 +6,7 @@ Json::Value odrive_json;
 bool targetJsonValid = false;
 odrive_endpoint *endpoint = NULL;
 
-#define ENCODER_CLICK_PER_ROTATE = 90;
+#define ENCODER_CLICK_PER_ROTATE 90;
 
 float base_width;
 float wheel_radius;
