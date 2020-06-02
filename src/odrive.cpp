@@ -189,8 +189,8 @@ int main(int argc, char **argv) {
     }
 
     //test robot width
-    nh.param("base_width", base_width, 0.58);
-    nh.param("wheel_radius", wheel_radius, 0.235 / 2);
+    nh.param<float>("base_width", base_width, 0.58);
+    nh.param<float>("wheel_radius", wheel_radius, 0.235 / 2);
 
     ros::Publisher odrive_pub = nh.advertise<ros_odrive::odrive_msg>("odrive_msg_" + od_sn, 100);
 
