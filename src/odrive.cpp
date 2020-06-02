@@ -18,9 +18,9 @@ float left_pos;
 
 ros::Time current_time, last_time;
 
-float global_x_in_meter;
-float global_y_in_meter;
-float global_thetha_in_meter;
+float global_x;
+float global_y;
+float global_theta;
 
 void msgCallback(const ros_odrive::odrive_ctrl::ConstPtr &msg) {
     std::string cmd;
@@ -114,8 +114,8 @@ ros_odrive::odrive_msg publishMessage(ros::Publisher odrive_pub) {
 }
 
 void publishOdometry(ros::Publisher odometry_pub, const ros_odrive::odrive_msg, const tf::TransformBroadcaster odom_broadcaster, const ros::Time current_time, const ros::Time last_time){
-    float curr_tick_right = msg.pos1;
-    float curr_tick_left = msg.pos0;
+    float curr_tick_right = odrive_msg.pos1;
+    float curr_tick_left = odrive_msg.pos0;
 
     float curr_right_pos = curr_tick_right - right_pos;
     float curr_left_pos = -1.0 * (curr_tick_left - left_pos);
@@ -128,7 +128,7 @@ void publishOdometry(ros::Publisher odometry_pub, const ros_odrive::odrive_msg, 
 
     float distance = (delta_right_wheel_in_meter + delta_left_wheel_in_meter) / 2;
 
-    ros::Time ros_time_elapsed = current_time - last_time;
+    ros::Duration ros_time_elapsed = current_time - last_time;
     float time_elapsed = ros_time_elapsed.to_sec();
 
     float local_theta = ( delta_right_wheel_in_meter - delta_left_wheel_in_meter ) / base_width;
@@ -263,9 +263,9 @@ int main(int argc, char **argv) {
     left_pos = 0;
 
     //TODO : read from params
-    global_x_in_meter = 0;
-    global_y_in_meter = 0;
-    global_thetha_in_meter = 0;
+    global_x = 0;
+    global_y = 0;
+    global_theta = 0;
 
     ros::Publisher odrive_pub = nh.advertise<ros_odrive::odrive_msg>("odrive_msg_" + od_sn, 100);
 
