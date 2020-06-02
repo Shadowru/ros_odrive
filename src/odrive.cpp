@@ -198,7 +198,7 @@ int main(int argc, char **argv) {
     nh.param("encoder_click_per_rotate", encoder_click_per_rotate, 90);
 
     wheel_circum = 2.0 * wheel_radius * M_PI;
-    encoder_click_per_meter = ENCODER_CLICK_PER_ROTATE / wheel_circum;
+    encoder_click_per_meter = encoder_click_per_rotate / wheel_circum;
 
     ros::Publisher odrive_pub = nh.advertise<ros_odrive::odrive_msg>("odrive_msg_" + od_sn, 100);
 
