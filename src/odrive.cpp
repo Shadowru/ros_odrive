@@ -140,7 +140,7 @@ void publishOdometry(ros::Publisher odometry_pub, const ros_odrive::odrive_msg o
 
     global_theta += local_theta;
 
-    geometry_msgs::Quaternion quaternion = tf::createQuaternionMsgFromYaw(global_theta);
+    tf::Quaternion quaternion = tf::createQuaternionMsgFromYaw(global_theta);
 
     ros::Time now_time = ros::Time::now();
 
