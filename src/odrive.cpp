@@ -113,7 +113,7 @@ ros_odrive::odrive_msg publishMessage(ros::Publisher odrive_pub) {
     return msg;
 }
 
-void publishOdometry(ros::Publisher odometry_pub, const ros_odrive::odrive_msg odrive_msg, const tf::TransformBroadcaster odom_broadcaster, const ros::Time current_time, const ros::Time last_time){
+void publishOdometry(ros::Publisher odometry_pub, const ros_odrive::odrive_msg odrive_msg, tf::TransformBroadcaster odom_broadcaster, const ros::Time current_time, const ros::Time last_time){
     float curr_tick_right = odrive_msg.pos1;
     float curr_tick_left = odrive_msg.pos0;
 
