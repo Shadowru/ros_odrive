@@ -148,7 +148,7 @@ void publishOdometry(ros::Publisher odometry_pub, const ros_odrive::odrive_msg o
     transform.setOrigin( tf::Vector3(global_x, global_y, 0.0) );
     transform.setRotation(quaternion);
 
-    br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "base_link", "odom"));
+    odom_broadcaster.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "base_link", "odom"));
 
     nav_msgs::Odometry odom;
     odom.header.stamp = now_time;
@@ -159,7 +159,7 @@ void publishOdometry(ros::Publisher odometry_pub, const ros_odrive::odrive_msg o
     odom.pose.pose.orientation = quaternion;
     odom.child_frame_id = "base_link";
     odom.twist.twist.linear.x = distance / time_elapsed;
-    odom.twist.twist.linear.y = 0
+    odom.twist.twist.linear.y = 0;
     odom.twist.twist.angular.z = local_theta / time_elapsed;
     odometry_pub.publish(odom);
 
