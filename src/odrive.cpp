@@ -6,8 +6,12 @@ Json::Value odrive_json;
 bool targetJsonValid = false;
 odrive_endpoint *endpoint = NULL;
 
+#DEFINE ENCODER_CLICK_PER_ROTATE = 90;
+
 float base_width;
 float wheel_radius;
+float wheel_circum;
+float encoder_click_per_meter;
 
 float left_encoder;
 float right_encoder;
@@ -122,8 +126,8 @@ void velCallback(const geometry_msgs::Twist &vel) {
     float vr = ((2.0 * v) + (w * base_width)) / (2.0 * wheel_radius);
     float vl = ((2.0 * v) + (-1.0 * w * base_width)) / (2.0 * wheel_radius);
 
-    float right = 20.0 * vr;
-    float left = -20.0 * vl;
+    float right = encoder_click_per_meter * vr;
+    float left = -1.0 * encoder_click_per_meter * vl;
 
     cmd = "axis0.controller.vel_setpoint";
     writeOdriveData(endpoint, odrive_json,
@@ -191,6 +195,9 @@ int main(int argc, char **argv) {
     //test robot width
     nh.param<float>("base_width", base_width, 0.58);
     nh.param<float>("wheel_radius", wheel_radius, 0.235 / 2);
+
+    wheel_circum = 2.0 * wheel_radius * M_PI;
+    encoder_click_per_meter = ENCODER_CLICK_PER_ROTATE / wheel_circum;
 
     ros::Publisher odrive_pub = nh.advertise<ros_odrive::odrive_msg>("odrive_msg_" + od_sn, 100);
 
