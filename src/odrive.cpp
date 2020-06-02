@@ -8,8 +8,8 @@ odrive_endpoint *endpoint = NULL;
 
 float base_width;
 
-float enc_left_last;
-float enc_right_last;
+float left_encoder;
+float right_encoder;
 
 ros::Time current_time, last_time;
 
@@ -72,70 +72,6 @@ void msgCallback(const ros_odrive::odrive_ctrl::ConstPtr &msg) {
     }
 }
 
-int publishOdometry(ros::Publisher odrive_odometry, ros_odrive::odrive_msg status_message) {
-
-    tf::TransformBroadcaster odom_broadcaster;
-
-    float delta_enc_left = status_message.vel0 - enc_left_last;
-    float delta_enc_right = status_message.vel1 - enc_right_last;
-
-    double distance_local = ((delta_enc_left + delta_enc_right) / 2) / 90;
-    double th_local = ((delta_enc_right - delta_enc_right) / 90) / base_width;
-
-    //calculate velocities
-
-    double dt = (current_time - last_time).toSec();
-
-    double distance_m_per_s = distance_local / dt;
-    double dr_per_s = th_local / dt;
-
-    if(distance_local != 0){
-        double x_local = cos(th_local) * distance_local;
-        double y_local = -sin(th_local) * distance_local;
-        global_x = global_x + (cos(global_th) * x_local - sin(global_th) * y_local);
-        global_y = global_y + (sin(global_th) * x_local + cos(global_th) * y_local);
-    }
-    if(th_local != 0){
-        global_th = global_th + th_local;
-    }
-
-    //since all odometry is 6DOF we'll need a quaternion created from yaw
-    geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromYaw(global_th);
-
-    geometry_msgs::TransformStamped odom_trans;
-    odom_trans.header.stamp = current_time;
-    odom_trans.header.frame_id = "odom";
-    odom_trans.child_frame_id = "base_link";
-
-    odom_trans.transform.translation.x = global_x;
-    odom_trans.transform.translation.y = global_y;
-    odom_trans.transform.translation.z = 0.0;
-    odom_trans.transform.rotation = odom_quat;
-
-    //send the transform
-    odom_broadcaster.sendTransform(odom_trans);
-
-    //next, we'll publish the odometry message over ROS
-    nav_msgs::Odometry odom;
-    odom.header.stamp = current_time;
-    odom.header.frame_id = "odom";
-
-    //set the position
-    odom.pose.pose.position.x = global_x;
-    odom.pose.pose.position.y = global_y;
-    odom.pose.pose.position.z = 0.0;
-    odom.pose.pose.orientation = odom_quat;
-
-    //set the velocity
-    odom.child_frame_id = "base_link";
-    odom.twist.twist.linear.x = distance_m_per_s;
-    odom.twist.twist.linear.y = 0.0;
-    odom.twist.twist.angular.z = dr_per_s;
-
-    //publish the message
-    odrive_odometry.publish(odom);
-}
-
 /**
  *
  * Publise odrive message to ROS
@@ -151,9 +87,6 @@ ros_odrive::odrive_msg publishMessage(ros::Publisher odrive_pub) {
     float fval;
     ros_odrive::odrive_msg msg;
 
-    // Collect data
-    readOdriveData(endpoint, odrive_json, string("vbus_voltage"), fval);
-    msg.vbus = fval;
     readOdriveData(endpoint, odrive_json, string("axis0.error"), u16val);
     msg.error0 = u16val;
     readOdriveData(endpoint, odrive_json, string("axis1.error"), u16val);
@@ -163,36 +96,11 @@ ros_odrive::odrive_msg publishMessage(ros::Publisher odrive_pub) {
     readOdriveData(endpoint, odrive_json, string("axis1.current_state"), u8val);
     msg.state1 = u8val;
     readOdriveData(endpoint, odrive_json,
-                   string("axis0.encoder.vel_estimate"), fval);
-    msg.vel0 = fval;
-    readOdriveData(endpoint, odrive_json,
-                   string("axis1.encoder.vel_estimate"), fval);
-    msg.vel1 = fval;
-    fval = 0.0;
-    //readOdriveData(endpoint, odrive_json,
-    //               string("axis0.encoder.pos_estimate"), fval);
+                   string("axis0.encoder.pos_estimate"), fval);
     msg.pos0 = fval;
-    //readOdriveData(endpoint, odrive_json,
-    //               string("axis1.encoder.pos_estimate"), fval);
+    readOdriveData(endpoint, odrive_json,
+                   string("axis1.encoder.pos_estimate"), fval);
     msg.pos1 = fval;
-    //readOdriveData(endpoint, odrive_json,
-    //               string("axis0.motor.current_meas_phB"), fval);
-    msg.curr0B = fval;
-    //readOdriveData(endpoint, odrive_json,
-    //               string("axis0.motor.current_meas_phC"), fval);
-    msg.curr0C = fval;
-    //readOdriveData(endpoint, odrive_json,
-    //               string("axis1.motor.current_meas_phB"), fval);
-    msg.curr1B = fval;
-    //readOdriveData(endpoint, odrive_json,
-    //               string("axis1.motor.current_meas_phC"), fval);
-    msg.curr1C = fval;
-    execOdriveGetTemp(endpoint, odrive_json,
-                      string("axis0.motor.get_inverter_temp"), fval);
-    msg.temp0 = fval;
-    execOdriveGetTemp(endpoint, odrive_json,
-                      string("axis1.motor.get_inverter_temp"), fval);
-    msg.temp1 = fval;
 
     // Publish message
     odrive_pub.publish(msg);
@@ -241,7 +149,7 @@ void velCallback(const geometry_msgs::Twist &vel) {
                     cmd, left);
 }
 
-void odrive_diagnostics(diagnostic_updater::DiagnosticStatusWrapper &stat){
+void odrive_diagnostics(diagnostic_updater::DiagnosticStatusWrapper &stat) {
     float fval;
 
     stat.summary(diagnostic_msgs::DiagnosticStatus::OK, "Odrive nominal");
@@ -256,6 +164,7 @@ void odrive_diagnostics(diagnostic_updater::DiagnosticStatusWrapper &stat){
     stat.add("Axis 0 Current", fval);
 
 }
+
 /**
  *
  * Node main function
@@ -330,7 +239,7 @@ int main(int argc, char **argv) {
     while (ros::ok()) {
         // Publish status message
         current_time = ros::Time::now();
-        //publishOdometry(odrive_odometry, publishMessage(odrive_pub));
+        publishMessage(odrive_pub);
         last_time = current_time;
 
         // update watchdog
@@ -340,7 +249,7 @@ int main(int argc, char **argv) {
         // idle loop
         r.sleep();
         ros::spinOnce();
-        if(diagnostics_barrier++ > 10) {
+        if (diagnostics_barrier++ > 10) {
             odrive_diagnostics_updater.update();
             diagnostics_barrier = 0;
         }
