@@ -161,8 +161,15 @@ void odrive_diagnostics(diagnostic_updater::DiagnosticStatusWrapper &stat) {
     stat.add("Axis 0 Current", fval);
 
     readOdriveData(endpoint, odrive_json, string("axis1.motor.current_control.Iq_measured"), fval);
-    stat.add("Axis 0 Current", fval);
+    stat.add("Axis 1 Current", fval);
 
+    execOdriveGetTemp(endpoint, odrive_json,
+                      string("axis0.motor.get_inverter_temp"), fval);
+    stat.add("Axis 0 temperature", fval);
+
+    execOdriveGetTemp(endpoint, odrive_json,
+                      string("axis1.motor.get_inverter_temp"), fval);
+    stat.add("Axis 0 temperature", fval);
 }
 
 /**
