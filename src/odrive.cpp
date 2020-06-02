@@ -6,7 +6,7 @@ Json::Value odrive_json;
 bool targetJsonValid = false;
 odrive_endpoint *endpoint = NULL;
 
-#define ENCODER_CLICK_PER_ROTATE 90;
+int encoder_click_per_rotate;
 
 float base_width;
 float wheel_radius;
@@ -195,6 +195,7 @@ int main(int argc, char **argv) {
     //test robot width
     nh.param<float>("base_width", base_width, 0.58);
     nh.param<float>("wheel_radius", wheel_radius, 0.235 / 2);
+    nh.param("encoder_click_per_rotate", encoder_click_per_rotate, 90);
 
     wheel_circum = 2.0 * wheel_radius * M_PI;
     encoder_click_per_meter = ENCODER_CLICK_PER_ROTATE / wheel_circum;
