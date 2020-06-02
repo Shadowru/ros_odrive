@@ -140,21 +140,15 @@ void publishOdometry(ros::Publisher odometry_pub, const ros_odrive::odrive_msg o
 
     global_theta += local_theta;
 
-    tf::Quaternion quaternion;
-    quaternion.x = 0.0;
-    quaternion.y = 0.0;
-    quaternion.z = sin( global_theta / 2 );
-    quaternion.w = cos( global_theta / 2 );
+    geometry_msgs::Quaternion quaternion = tf::createQuaternionMsgFromYaw(global_theta);
 
     ros::Time now_time = ros::Time::now();
 
-    odomBroadcaster.sendTransform(
-            (global_x, global_y, 0),
-            (quaternion.x, quaternion.y, quaternion.z, quaternion.w),
-            now_time,
-            "base_link",
-            "odom"
-    )
+    tf::Transform transform;
+    transform.setOrigin( tf::Vector3(global_x, global_y, 0.0) );
+    transform.setRotation(quaternion);
+
+    br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "base_link", "odom"));
 
     nav_msgs::Odometry odom;
     odom.header.stamp = now_time;
