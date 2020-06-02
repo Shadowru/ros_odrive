@@ -13,14 +13,14 @@ float wheel_radius;
 float wheel_circum;
 float encoder_click_per_meter;
 
-float left_encoder;
-float right_encoder;
+float right_pos;
+float left_pos;
 
 ros::Time current_time, last_time;
 
-double global_x;
-double global_y;
-double global_th;
+float global_x_in_meter;
+float global_y_in_meter;
+float global_thetha_in_meter;
 
 void msgCallback(const ros_odrive::odrive_ctrl::ConstPtr &msg) {
     std::string cmd;
@@ -113,6 +113,64 @@ ros_odrive::odrive_msg publishMessage(ros::Publisher odrive_pub) {
     return msg;
 }
 
+void publishOdometry(ros::Publisher odometry_pub, const ros_odrive::odrive_msg, const tf::TransformBroadcaster odom_broadcaster, const ros::Time current_time, const ros::Time last_time){
+    float curr_tick_right = msg.pos1;
+    float curr_tick_left = msg.pos0;
+
+    float curr_right_pos = curr_tick_right - right_pos;
+    float curr_left_pos = -1.0 * (curr_tick_left - left_pos);
+
+    right_pos = curr_tick_right;
+    left_pos = curr_tick_left;
+
+    float delta_right_wheel_in_meter = encoder_click_per_meter / curr_right_pos;
+    float delta_left_wheel_in_meter = encoder_click_per_meter / curr_left_pos;
+
+    float distance = (delta_right_wheel_in_meter + delta_left_wheel_in_meter) / 2;
+
+    ros::Time ros_time_elapsed = current_time - last_time;
+    float time_elapsed = ros_time_elapsed.to_sec();
+
+    float local_theta = ( delta_right_wheel_in_meter - delta_left_wheel_in_meter ) / base_width;
+    float local_x = cos( local_theta ) * distance;
+    float local_y = -sin( local_theta ) * distance;
+
+    global_x = global_x + ( cos( global_theta ) * local_x - sin( global_theta ) * local_y );
+    global_y = global_y + ( sin( global_theta ) * local_x + cos( global_theta ) * local_y );
+
+    global_theta += local_theta;
+
+    tf::Quaternion quaternion;
+    quaternion.x = 0.0;
+    quaternion.y = 0.0;
+    quaternion.z = sin( global_theta / 2 );
+    quaternion.w = cos( global_theta / 2 );
+
+    ros::Time now_time = ros::Time::now();
+
+    odomBroadcaster.sendTransform(
+            (global_x, global_y, 0),
+            (quaternion.x, quaternion.y, quaternion.z, quaternion.w),
+            now_time,
+            "base_link",
+            "odom"
+    )
+
+    nav_msgs::Odometry odom;
+    odom.header.stamp = now_time;
+    odom.header.frame_id = "odom";
+    odom.pose.pose.position.x = global_x;
+    odom.pose.pose.position.y = global_y;
+    odom.pose.pose.position.z = 0;
+    odom.pose.pose.orientation = quaternion;
+    odom.child_frame_id = "base_link";
+    odom.twist.twist.linear.x = distance / time_elapsed;
+    odom.twist.twist.linear.y = 0
+    odom.twist.twist.angular.z = local_theta / time_elapsed;
+    odometry_pub.publish(odom);
+
+}
+
 void velCallback(const geometry_msgs::Twist &vel) {
 
     std::string cmd;
@@ -200,6 +258,15 @@ int main(int argc, char **argv) {
     wheel_circum = 2.0 * wheel_radius * M_PI;
     encoder_click_per_meter = encoder_click_per_rotate / wheel_circum;
 
+    //TODO : read from odrive
+    right_pos = 0;
+    left_pos = 0;
+
+    //TODO : read from params
+    global_x_in_meter = 0;
+    global_y_in_meter = 0;
+    global_thetha_in_meter = 0;
+
     ros::Publisher odrive_pub = nh.advertise<ros_odrive::odrive_msg>("odrive_msg_" + od_sn, 100);
 
     ros::Publisher odrive_odometry = nh.advertise<nav_msgs::Odometry>("odometry", 100);
@@ -207,6 +274,8 @@ int main(int argc, char **argv) {
     ros::Subscriber odrive_sub = nh.subscribe("odrive_ctrl", 10, msgCallback);
 
     ros::Subscriber odrive_cmd_vel = nh.subscribe("cmd_vel", 10, velCallback);
+
+    tf::TransformBroadcaster odom_broadcaster;
 
     diagnostic_updater::Updater odrive_diagnostics_updater;
     odrive_diagnostics_updater.setHardwareIDf("ODRIVE S/N: %s", od_sn.c_str());
@@ -245,7 +314,7 @@ int main(int argc, char **argv) {
     while (ros::ok()) {
         // Publish status message
         current_time = ros::Time::now();
-        publishMessage(odrive_pub);
+        publishOdometry(odrive_odometry, publishMessage(odrive_pub), odom_broadcaster, current_time, last_time);
         last_time = current_time;
 
         // update watchdog
