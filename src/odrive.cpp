@@ -157,7 +157,7 @@ void publishOdometry(ros::Publisher odometry_pub, const ros_odrive::odrive_msg o
     odom.pose.pose.position.x = global_x;
     odom.pose.pose.position.y = global_y;
     odom.pose.pose.position.z = 0;
-    odom.pose.pose.orientation = tf::createQuaternionMsgFromYaw(th);
+    odom.pose.pose.orientation = tf::createQuaternionMsgFromYaw(global_theta);
     odom.child_frame_id = "base_link";
     odom.twist.twist.linear.x = distance / time_elapsed;
     odom.twist.twist.linear.y = 0;
