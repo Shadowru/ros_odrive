@@ -256,15 +256,6 @@ int main(int argc, char **argv) {
     wheel_circum = 2.0 * wheel_radius * M_PI;
     encoder_click_per_meter = encoder_click_per_rotate / wheel_circum;
 
-    //TODO : read from odrive
-    right_pos = 0;
-    left_pos = 0;
-
-    //TODO : read from params
-    global_x = 0;
-    global_y = 0;
-    global_theta = 0;
-
     ros::Publisher odrive_pub = nh.advertise<ros_odrive::odrive_msg>("odrive_msg_" + od_sn, 100);
 
     ros::Publisher odrive_odometry = nh.advertise<nav_msgs::Odometry>("odometry", 100);
@@ -305,6 +296,20 @@ int main(int argc, char **argv) {
 
     current_time = ros::Time::now();
     last_time = ros::Time::now();
+
+    ROS_INFO("Init odometry");
+    //TODO : SOLID function
+    right_pos = readOdriveData(endpoint, odrive_json,
+                               string("axis1.encoder.pos_estimate"), fval);;
+    left_pos = readOdriveData(endpoint, odrive_json,
+                              string("axis0.encoder.pos_estimate"), fval);;
+    ROS_INFO("Start pos : Axis0 : %f , Axis1 : %f", left_pos, right_pos);
+
+    //TODO : read from params
+    global_x = 0;
+    global_y = 0;
+    global_theta = 0;
+
 
     // Example loop - reading values and updating motor velocity
     ROS_INFO("Starting idle loop");
