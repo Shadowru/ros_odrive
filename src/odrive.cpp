@@ -143,7 +143,7 @@ void publishOdometry(ros::Publisher odometry_pub, const ros_odrive::odrive_msg o
 
     global_theta += local_theta;
 
-    global_theta = math.atan2(math.sin(global_theta), math.cos(global_theta));
+    //global_theta = math.atan2(math.sin(global_theta), math.cos(global_theta));
 
     tf::Quaternion quaternion;
     quaternion.setRPY(0, 0, global_theta);
