@@ -308,17 +308,17 @@ int main(int argc, char **argv) {
     ROS_INFO("Start pos : Axis0 : %f , Axis1 : %f", left_pos, right_pos);
 
     float _temp_p_val = 0.04;
-    float _temp_i_val = 0.1;
+    float _temp_i_val = 0.0;
 
     writeOdriveData(endpoint, odrive_json,
-                    "odrv0.axis0.controller.config.vel_gain", _temp_p_val);
+                    "axis0.controller.config.vel_gain", _temp_p_val);
     writeOdriveData(endpoint, odrive_json,
-                    "odrv0.axis0.controller.config.vel_integrator_gain", _temp_i_val);
+                    "axis0.controller.config.vel_integrator_gain", _temp_i_val);
 
     writeOdriveData(endpoint, odrive_json,
-                    "odrv0.axis1.controller.config.vel_gain", _temp_p_val);
+                    "axis1.controller.config.vel_gain", _temp_p_val);
     writeOdriveData(endpoint, odrive_json,
-                    "odrv0.axis1.controller.config.vel_integrator_gain", _temp_i_val);
+                    "axis1.controller.config.vel_integrator_gain", _temp_i_val);
 
     //TODO : read from params
     global_x = 0;
