@@ -7,5 +7,4 @@
         <arg name="trajectory_source_frame_name" value="scanmatcher_frame"/>
         <arg name="map_file_path" value="$(arg geotiff_map_file_path)"/>
     </include>
-
 </launch>
