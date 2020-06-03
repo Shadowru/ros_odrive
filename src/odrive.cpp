@@ -332,7 +332,8 @@ int main(int argc, char **argv) {
     while (ros::ok()) {
         // Publish status message
         current_time = ros::Time::now();
-        //publishOdometry(odrive_odometry, publishMessage(odrive_pub), odom_broadcaster, current_time, last_time);
+        publishMessage(odrive_pub);
+        //publishOdometry(odrive_odometry, , odom_broadcaster, current_time, last_time);
         last_time = current_time;
 
         // update watchdog
