@@ -307,8 +307,8 @@ int main(int argc, char **argv) {
                    string("axis0.encoder.pos_estimate"), left_pos);;
     ROS_INFO("Start pos : Axis0 : %f , Axis1 : %f", left_pos, right_pos);
 
-    float _temp_p_val = 0.018;
-    float _temp_i_val = 0.1;
+    float _temp_p_val = 0.02;
+    float _temp_i_val = 0.15;
 
     writeOdriveData(endpoint, odrive_json,
                     "axis0.controller.config.vel_gain", _temp_p_val);
