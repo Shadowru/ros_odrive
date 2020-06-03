@@ -113,7 +113,9 @@ ros_odrive::odrive_msg publishMessage(ros::Publisher odrive_pub) {
     return msg;
 }
 
-void publishOdometry(ros::Publisher odometry_pub, const ros_odrive::odrive_msg odrive_msg, tf::TransformBroadcaster odom_broadcaster, const ros::Time current_time, const ros::Time last_time){
+void publishOdometry(ros::Publisher odometry_pub, const ros_odrive::odrive_msg odrive_msg,
+                     tf::TransformBroadcaster odom_broadcaster, const ros::Time current_time,
+                     const ros::Time last_time) {
     float curr_tick_right = odrive_msg.pos1;
     float curr_tick_left = odrive_msg.pos0;
 
@@ -126,22 +128,22 @@ void publishOdometry(ros::Publisher odometry_pub, const ros_odrive::odrive_msg o
     float delta_right_wheel_in_meter = curr_right_pos / encoder_click_per_meter;
     float delta_left_wheel_in_meter = curr_left_pos / encoder_click_per_meter;
 
-    float local_theta = ( delta_right_wheel_in_meter - delta_left_wheel_in_meter ) / base_width;
+    float local_theta = (delta_right_wheel_in_meter - delta_left_wheel_in_meter) / base_width;
 
     float distance = (delta_right_wheel_in_meter + delta_left_wheel_in_meter) / 2;
 
     ros::Duration ros_time_elapsed = current_time - last_time;
     float time_elapsed = ros_time_elapsed.toSec();
 
-    float local_x = cos( global_theta ) * distance;
-    float local_y = -sin( global_theta ) * distance;
+    float local_x = cos(global_theta) * distance;
+    float local_y = -sin(global_theta) * distance;
 
-    global_x = global_x + ( cos( global_theta ) * local_x - sin( global_theta ) * local_y );
-    global_y = global_y + ( sin( global_theta ) * local_x + cos( global_theta ) * local_y );
+    global_x = global_x + (cos(global_theta) * local_x - sin(global_theta) * local_y);
+    global_y = global_y + (sin(global_theta) * local_x + cos(global_theta) * local_y);
 
     global_theta += local_theta;
 
-    global_theta = math.atan2( math.sin(global_theta), math.cos(global_theta) );
+    global_theta = math.atan2(math.sin(global_theta), math.cos(global_theta));
 
     tf::Quaternion quaternion;
     quaternion.setRPY(0, 0, global_theta);
@@ -149,7 +151,7 @@ void publishOdometry(ros::Publisher odometry_pub, const ros_odrive::odrive_msg o
     ros::Time now_time = ros::Time::now();
 
     tf::Transform transform;
-    transform.setOrigin( tf::Vector3(global_x, global_y, 0.0) );
+    transform.setOrigin(tf::Vector3(global_x, global_y, 0.0));
     transform.setRotation(quaternion);
 
     odom_broadcaster.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "base_link", "odom"));
@@ -299,10 +301,10 @@ int main(int argc, char **argv) {
 
     ROS_INFO("Init odometry");
     //TODO : SOLID function
-    right_pos = readOdriveData(endpoint, odrive_json,
-                               string("axis1.encoder.pos_estimate"), fval);;
-    left_pos = readOdriveData(endpoint, odrive_json,
-                              string("axis0.encoder.pos_estimate"), fval);;
+    readOdriveData(endpoint, odrive_json,
+                   string("axis1.encoder.pos_estimate"), right_pos);;
+    readOdriveData(endpoint, odrive_json,
+                   string("axis0.encoder.pos_estimate"), left_pos);;
     ROS_INFO("Start pos : Axis0 : %f , Axis1 : %f", left_pos, right_pos);
 
     //TODO : read from params
