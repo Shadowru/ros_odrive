@@ -126,19 +126,22 @@ void publishOdometry(ros::Publisher odometry_pub, const ros_odrive::odrive_msg o
     float delta_right_wheel_in_meter = curr_right_pos / encoder_click_per_meter;
     float delta_left_wheel_in_meter = curr_left_pos / encoder_click_per_meter;
 
+    float local_theta = ( delta_right_wheel_in_meter - delta_left_wheel_in_meter ) / base_width;
+
     float distance = (delta_right_wheel_in_meter + delta_left_wheel_in_meter) / 2;
 
     ros::Duration ros_time_elapsed = current_time - last_time;
     float time_elapsed = ros_time_elapsed.toSec();
 
-    float local_theta = ( delta_right_wheel_in_meter - delta_left_wheel_in_meter ) / base_width;
-    float local_x = cos( local_theta ) * distance;
-    float local_y = -sin( local_theta ) * distance;
+    float local_x = cos( global_theta ) * distance;
+    float local_y = -sin( global_theta ) * distance;
 
     global_x = global_x + ( cos( global_theta ) * local_x - sin( global_theta ) * local_y );
     global_y = global_y + ( sin( global_theta ) * local_x + cos( global_theta ) * local_y );
 
     global_theta += local_theta;
+
+    global_theta = math.atan2( math.sin(global_theta), math.cos(global_theta) );
 
     tf::Quaternion quaternion;
     quaternion.setRPY(0, 0, global_theta);
