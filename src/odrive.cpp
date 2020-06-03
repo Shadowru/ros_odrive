@@ -187,11 +187,11 @@ void velCallback(const geometry_msgs::Twist &vel) {
     float right = encoder_click_per_meter * vr;
     float left = -1.0 * encoder_click_per_meter * vl;
 
-    cmd = "axis0.controller.vel_setpoint";
+    cmd = "axis1.controller.vel_setpoint";
     writeOdriveData(endpoint, odrive_json,
                     cmd, right);
 
-    cmd = "axis1.controller.vel_setpoint";
+    cmd = "axis0.controller.vel_setpoint";
     writeOdriveData(endpoint, odrive_json,
                     cmd, left);
 }
