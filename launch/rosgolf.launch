@@ -5,7 +5,6 @@
   </include>
 <!--  <include file="$(find rplidar_ros)/launch/rplidar.launch"/>-->
   <include file="$(find ros_odrive)/launch/diagnostics.launch"/>
-  <node name="ros_odrive" pkg="ros_odrive" type="ros_odrive" />
-
+  <node name="ros_odrive" pkg="ros_odrive" type="ros_odrive" args="_od_sn:=0x335831593536"/>
   <node pkg="tf" type="static_transform_publisher" name="map_to_base" args="0 0 0 0 0 1 map base_link 100"/>
 </launch>
