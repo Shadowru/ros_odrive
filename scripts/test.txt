@@ -18,3 +18,5 @@ rosrun teleop_twist_joy teleop_node /cmd_vel:=/ros_odrive/cmd_vel
 roslaunch rtabmap_ros rtabmap.launch rtabmap_args:="--delete_db_on_start" rtabmapviz:=false rviz:=true
 
 roslaunch ros_odrive rosgolf.launch
+
+roslaunch ros_odrive hector_slam.launch
