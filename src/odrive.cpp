@@ -184,8 +184,8 @@ void velCallback(const geometry_msgs::Twist &vel) {
     float vr = ((2.0 * v) + (w * base_width)) / (2.0 * wheel_radius);
     float vl = ((2.0 * v) + (-1.0 * w * base_width)) / (2.0 * wheel_radius);
 
-    float right = encoder_click_per_meter * vr;
-    float left = -1.0 * encoder_click_per_meter * vl;
+    float right = -1.0 * encoder_click_per_meter * vr;
+    float left = encoder_click_per_meter * vl;
 
     cmd = "axis1.controller.vel_setpoint";
     writeOdriveData(endpoint, odrive_json,
