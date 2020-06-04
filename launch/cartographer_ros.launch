@@ -2,7 +2,7 @@
     <node name="cartographer_node" pkg="cartographer_ros"
           type="cartographer_node" args="
           -configuration_directory $(find ros_odrive)/config
-          -configuration_basename cartographer_ros.lua"
+          -configuration_basename 2d_cartographer.lua"
           output="screen">
         <remap from="echoes" to="horizontal_laser_2d" />
     </node>
