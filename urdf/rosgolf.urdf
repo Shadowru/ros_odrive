@@ -86,7 +86,7 @@
         <origin xyz="0.47 0 0.035" rpy="0 0 0"/>
     </joint>
 
-    <link name="scanner">
+    <link name="laser">
         <visual>
             <geometry>
                 <cylinder length="0.04" radius="0.04"/>
@@ -98,7 +98,7 @@
 
     <joint name="base_to_scanner" type="fixed">
     <parent link="base_link"/>
-    <child link="scanner"/>
+    <child link="laser"/>
     <origin xyz="0.0 0 0.26" rpy="0 0 0"/>
     </joint>
 
