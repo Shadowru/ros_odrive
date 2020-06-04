@@ -5,8 +5,8 @@
     <arg name="port" value="8080"/>
   </include>
   <include file="$(find ros_odrive)/launch/rplidar.launch"/>
-  <include file="$(find ros_odrive)/launch/hector_slam.launch"/>
-<!--  <include file="$(find ros_odrive)/launch/cartographer_ros.launch"/>-->
+<!--  <include file="$(find ros_odrive)/launch/hector_slam.launch"/>-->
+  <include file="$(find ros_odrive)/launch/cartographer_ros.launch"/>
 <!--  <include file="$(find ros_odrive)/launch/diagnostics.launch"/>-->
   <include file="$(find ros_odrive)/launch/move_base.launch"/>
   <node name="ros_odrive" pkg="ros_odrive" type="ros_odrive" args="_od_sn:=0x335831593536"/>
