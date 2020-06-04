@@ -1,66 +1,99 @@
-<?xml version='1.0'?>
-<robot name="ugv">
-    <material name="orange">
-        <color rgba="1.0 0.5 0.2 1"/>
-    </material>
+<robot name="rosgolf_robot">
+
     <material name="gray">
-        <color rgba="0.2 0.2 0.2 1"/>
+        <color rgba="128 128 128 1"/>
     </material>
 
-    <link name="base_footprint">
-    </link>
+    <material name="yellow">
+        <color rgba="154 205 50 1"/>
+    </material>
+
+    <material name="black">
+        <color rgba="0 0 0 1"/>
+    </material>
 
     <link name="base_link">
-        <inertial>
-            <mass value="1.0"/>
-            <origin xyz="0.0 0.1 0.0"/>
-            <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.0"/>
-        </inertial>
         <visual>
-            <origin xyz="0.0 0.0 0.0"/>
             <geometry>
-                <box size="0.20 0.20 0.20"/>
+                <box size="0.72 0.485 0.05"/>
             </geometry>
+            <origin rpy="0 0 0" xyz="0.20 0 0.075"/>
+            <material name="black"/>
+        </visual>
+    </link>
+
+    <link name="cover">
+        <visual>
+            <geometry>
+                <box size="0.72 0.485 0.15"/>
+            </geometry>
+            <origin rpy="0 0 0" xyz="0.20 0 0.175"/>
+            <material name="yellow"/>
+        </visual>
+    </link>
+
+    <link name="lwheel">
+        <visual>
+            <geometry>
+                <cylinder length="0.07" radius="0.12"/>
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <material name="black"/>
+        </visual>
+    </link>
+
+    <joint name="base_to_lwheel" type="fixed">
+        <parent link="base_link"/>
+        <child link="lwheel"/>
+        <origin xyz="0 0.29 0.12" rpy="1.5708 0 0"/>
+    </joint>
+
+    <link name="rwheel">
+        <visual>
+            <geometry>
+                <cylinder length="0.07" radius="0.12"/>
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <material name="black"/>
+        </visual>
+    </link>
+
+    <joint name="base_to_rwheel" type="fixed">
+        <parent link="base_link"/>
+        <child link="rwheel"/>
+        <origin xyz="0 -0.29 0.12" rpy="-1.5708 0 0"/>
+    </joint>
+
+    <link name="fwheel">
+        <visual>
+            <geometry>
+                <cylinder length="0.02" radius="0.035"/>
+            </geometry>
+            <origin rpy="1.578 0 0" xyz="0 0 0"/>
             <material name="gray"/>
         </visual>
     </link>
 
-    <link name="imu">
-        <visual>
-            <origin xyz="0.0 0.0 0.0"/>
-            <geometry>
-                <box size="0.06 0.04 0.02"/>
-            </geometry>
-            <material name="orange"/>
-        </visual>
-    </link>
+    <joint name="base_to_fwheel" type="fixed">
+        <parent link="base_link"/>
+        <child link="fwheel"/>
+        <origin xyz="0.47 0 0.035" rpy="0 0 0"/>
+    </joint>
 
-    <link name="laser">
+    <link name="scanner">
         <visual>
-            <origin xyz="0.0 0.0 0.0"/>
             <geometry>
-                <cylinder length="0.07" radius="0.05"/>
+                <cylinder length="0.04" radius="0.04"/>
             </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
             <material name="gray"/>
         </visual>
     </link>
 
-    <joint name="imu_link_joint" type="fixed">
-        <parent link="base_link"/>
-        <child link="imu"/>
-        <origin xyz="0 0 0" rpy="0 0 0"/>
-    </joint>
-
-    <joint name="laser_frame_link_joint" type="fixed">
-        <parent link="base_link"/>
-        <child link="laser"/>
-        <origin xyz="0 0 0" rpy="0 0 0"/>
-    </joint>
-
-    <joint name="base_footprint_joint" type="fixed">
-        <parent link="base_footprint"/>
-        <child link="base_link"/>
-        <origin xyz="0 0 0" rpy="0 0 0"/>
+    <joint name="base_to_scanner" type="fixed">
+    <parent link="base_link"/>
+    <child link="scanner"/>
+    <origin xyz="0.0 0 0.26" rpy="0 0 0"/>
     </joint>
 
 </robot>
