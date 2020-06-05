@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
 <launch>
   <include file="$(find ros_odrive)/launch/urdf.launch"/>
-  <include file="$(find ros_odrive)/launch/rosgolf_localization.launch"/>
+<!--  <include file="$(find ros_odrive)/launch/rosgolf_localization.launch"/>-->
+  <include file="$(find ros_odrive)/launch/robot_pose_ekf.launch"/>
   <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch" >
     <arg name="port" value="8080"/>
   </include>
