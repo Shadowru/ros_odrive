@@ -175,8 +175,7 @@ void resetOdometry(){
 
 void initJointStatePublisher(ros::NodeHandle nh)
 {
-	joint_state_pub = new ros::Publisher("/joint_states", &joint_states);
-	nh.advertise(*joint_state_pub);
+    joint_state_pub = nh.advertise<sensor_msgs::JointState>("/joint_states" + od_sn, 10);
 
 	joint_states.header.frame_id = "base_link";
 
@@ -385,7 +384,7 @@ int main(int argc, char **argv) {
 
     ros::Publisher odrive_pub = nh.advertise<ros_odrive::odrive_msg>("odrive_msg_" + od_sn, 100);
 
-    ros::Publisher odrive_odometry = nh.advertise<nav_msgs::Odometry>("odometry", 100);
+    ros::Publisher odrive_odometry = nh.advertise<nav_msgs::Odometry>("odometry", 10);
 
     ros::Subscriber odrive_sub = nh.subscribe("odrive_ctrl", 10, msgCallback);
 
