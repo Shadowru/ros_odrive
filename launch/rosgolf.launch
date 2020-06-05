@@ -12,5 +12,7 @@
 <!--  <include file="$(find ros_odrive)/launch/diagnostics.launch"/>-->
   <include file="$(find ros_odrive)/launch/move_base.launch"/>
   <include file="$(find ros_odrive)/launch/webui.launch"/>
-  <node name="ros_odrive" pkg="ros_odrive" type="ros_odrive" args="_od_sn:=0x335831593536"/>
+  <node name="ros_odrive" pkg="ros_odrive" type="ros_odrive" args="_od_sn:=0x335831593536">
+    <remap from="/ros_odrive/odom" to="odom"/>
+  </node>
 </launch>
