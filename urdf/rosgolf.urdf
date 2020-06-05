@@ -53,15 +53,15 @@
             <geometry>
                 <cylinder length="0.07" radius="0.12"/>
             </geometry>
-            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <origin rpy="1.5708 0 0" xyz="0 0 0"/>
             <material name="black"/>
         </visual>
     </link>
 
-    <joint name="left_wheel_hinge" type="fixed">
+    <joint name="left_wheel_hinge" type="continuous">
         <parent link="base_link"/>
         <child link="lwheel"/>
-        <origin xyz="0 0.29 0.12" rpy="1.5708 0 0"/>
+        <origin xyz="0 0.29 0.12" rpy="0 0 0"/>
     </joint>
 
     <link name="rwheel">
@@ -69,15 +69,15 @@
             <geometry>
                 <cylinder length="0.07" radius="0.12"/>
             </geometry>
-            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <origin rpy="-1.5708 0 0" xyz="0 0 0"/>
             <material name="black"/>
         </visual>
     </link>
 
-    <joint name="right_wheel_hinge" type="fixed">
+    <joint name="right_wheel_hinge" type="continuous">
         <parent link="base_link"/>
         <child link="rwheel"/>
-        <origin xyz="0 -0.29 0.12" rpy="-1.5708 0 0"/>
+        <origin xyz="0 -0.29 0.12" rpy="0 0 0"/>
     </joint>
 
     <link name="fwheel">
