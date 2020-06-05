@@ -205,8 +205,11 @@ void publishOdometry(ros::Publisher odometry_pub, const ros_odrive::odrive_msg o
     double curr_wheel_L_ang_pos = getAngularPos(LEFT_AXIS);
     double dtime = (current_time - last_time).toSec();
 
-    wheel_L_ang_vel = (curr_wheel_L_ang_pos - wheel_L_ang_pos) / (dtime);
-    wheel_R_ang_vel = (curr_wheel_R_ang_pos + wheel_R_ang_pos) / (dtime);
+    double delta_L_ang_pos = curr_wheel_L_ang_pos - wheel_L_ang_pos;
+    double delta_R_ang_pos = -1.0 * (curr_wheel_R_ang_pos - wheel_R_ang_pos);
+
+    wheel_L_ang_vel = delta_L_ang_pos / (dtime);
+    wheel_R_ang_vel = delta_R_ang_pos / (dtime);
     wheel_L_ang_pos = curr_wheel_L_ang_pos;
     wheel_R_ang_pos = curr_wheel_R_ang_pos;
     robot_angular_vel = (((wheel_R_ang_pos - wheel_L_ang_pos) * wheel_radius / base_width) - robot_angular_pos) / dtime;
