@@ -369,7 +369,10 @@ int main(int argc, char **argv) {
 	joint_states.header.frame_id = "base_link";
 
     //assigning the arrays to the message
-    std::string joints_name[] = {"left_wheel_hinge", "right_wheel_hinge"};
+    vector<std::string> joints_name(2, "");
+    joints_name[0]= "left_wheel_hinge";
+    joints_name[1]= ""right_wheel_hinge";
+
     joint_states.name = joints_name;
 
     joint_states.position = pos;
