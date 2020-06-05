@@ -21,8 +21,8 @@ double coeff;
 
 ros::Time current_time, last_time;
 
-double raw_wheel_L_ang_vel;
-double raw_wheel_R_ang_vel;
+double raw_wheel_L_ang_pos;
+double raw_wheel_R_ang_pos;
 
 double wheel_L_ang_vel;
 double wheel_R_ang_vel;
