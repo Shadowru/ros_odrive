@@ -205,8 +205,8 @@ void publishOdometry(ros::Publisher odometry_pub, const ros_odrive::odrive_msg o
     double curr_wheel_L_ang_pos = getAngularPos(LEFT_AXIS);
     double dtime = (current_time - last_time).toSec();
 
-    double delta_L_ang_pos = curr_wheel_L_ang_pos - wheel_L_ang_pos;
-    double delta_R_ang_pos = -1.0 * (curr_wheel_R_ang_pos - wheel_R_ang_pos);
+    double delta_L_ang_pos =  -1.0 * (curr_wheel_L_ang_pos - wheel_L_ang_pos);
+    double delta_R_ang_pos = curr_wheel_R_ang_pos - wheel_R_ang_pos;
 
     wheel_L_ang_vel = delta_L_ang_pos / (dtime);
     wheel_R_ang_vel = delta_R_ang_pos / (dtime);
@@ -239,7 +239,7 @@ void velCallback(const geometry_msgs::Twist &vel) {
     float right = -1.0 * encoder_click_per_meter * vr;
     float left = encoder_click_per_meter * vl;
 
-    cmd = RIGHT_AXIS.append("axis1.controller.vel_setpoint");
+    cmd = RIGHT_AXIS.append("controller.vel_setpoint");
     writeOdriveData(endpoint, odrive_json,
                     cmd, right);
 
@@ -324,7 +324,7 @@ int main(int argc, char **argv) {
     //test robot width
     nh.param<float>("base_width", base_width, 0.58);
     nh.param<float>("wheel_radius", wheel_radius, 0.235 / 2);
-    nh.param("encoder_click_per_rotate", encoder_click_per_rotate, 90);
+    nh.param("encoder_click_per_rotate", encoder_click_per_rotate, 60);
 
     wheel_circum = 2.0 * wheel_radius * M_PI;
 
