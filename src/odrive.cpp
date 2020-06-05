@@ -102,7 +102,7 @@ void msgCallback(const ros_odrive::odrive_ctrl::ConstPtr &msg) {
 float readWheelEncoder(string axis){
     float fval;
     readOdriveData(endpoint, odrive_json,
-                   axis.append(".encoder.pos_cpr"), fval);
+                   axis.append(".encoder.pos_estimate"), fval);
     return fval;
 }
 
