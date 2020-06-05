@@ -134,9 +134,9 @@ void resetOdometry(){
     ROS_INFO("Reset odometry");
     right_encoder = readRightWheelEncoder();
     left_encoder = readLeftWheelEncoder();
-    x_pose = 0;
-    y_pose = 0;
-    th_pose = 0;
+    x_pose = 0.0;
+    y_pose = 0.0;
+    th_pose = 0.0;
 };
 
 void sendOdometry(double delta_x, double delta_y, double delta_th, double dt, tf::TransformBroadcaster odom_broadcaster, ros::Publisher odometry_pub){
@@ -146,9 +146,9 @@ void sendOdometry(double delta_x, double delta_y, double delta_th, double dt, tf
     double delta_y = (vx * sin(th) + vy * cos(th)) * dt;
     double delta_th = vth * dt;
 */
-    x_pose += 0.001;//delta_x;
-    y_pose += 0.001;//delta_y;
-    th_pose += 0.001;//delta_th;
+    x_pose += delta_x;
+    y_pose += delta_y;
+    th_pose += delta_th;
 
     double vx = delta_x / dt;
     double vy = delta_y / dt;
@@ -219,6 +219,9 @@ void publishOdometry(ros::Publisher odometry_pub, const ros_odrive::odrive_msg o
     double sin_current = sin(th_pose);
 
     double fraction = right_left / base_width;
+    if(isnan(fraction)){
+        ROS_ERROR("fraction is nan");
+    }
     double vx = a * (sin(fraction + th_pose) - sin_current);
     double vy = -a * (cos(fraction + th_pose) - cos_current);
     double vtheta = fraction;
