@@ -4,9 +4,9 @@
   <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch" >
     <arg name="port" value="8080"/>
   </include>
-  <include file="$(find ros_odrive)/launch/rplidar.launch"/>
+<!--  <include file="$(find ros_odrive)/launch/rplidar.launch"/>-->
 <!--  <include file="$(find ros_odrive)/launch/hector_slam.launch"/>-->
-  <include file="$(find ros_odrive)/launch/cartographer_ros.launch"/>
+<!--  <include file="$(find ros_odrive)/launch/cartographer_ros.launch"/>-->
 <!--  <include file="$(find ros_odrive)/launch/diagnostics.launch"/>-->
 <!--  <include file="$(find ros_odrive)/launch/move_base.launch"/>-->
   <include file="$(find ros_odrive)/launch/webui.launch"/>
