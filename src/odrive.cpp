@@ -208,8 +208,8 @@ void publishOdometry(ros::Publisher odometry_pub, const ros_odrive::odrive_msg o
     wheel_R_ang_vel = (curr_wheel_R_ang_pos - wheel_R_ang_pos) / (dtime);
     wheel_L_ang_pos = curr_wheel_L_ang_pos;
     wheel_R_ang_pos = curr_wheel_R_ang_pos;
-    robot_angular_vel = (((wheel_R_ang_pos - odom->wheel_L_ang_pos) * wheel_radius / base_width) - robot_angular_pos) / dtime;
-    robot_angular_pos = (wheel_R_ang_pos - odom->wheel_L_ang_pos) * wheel_radius / base_width;
+    robot_angular_vel = (((wheel_R_ang_pos - >wheel_L_ang_pos) * wheel_radius / base_width) - robot_angular_pos) / dtime;
+    robot_angular_pos = (wheel_R_ang_pos - wheel_L_ang_pos) * wheel_radius / base_width;
     robot_x_vel = (wheel_L_ang_vel * wheel_radius + robot_angular_vel * (base_width / 2.0)) * cos(robot_angular_pos);
     robot_y_vel = (wheel_L_ang_vel * wheel_radius + robot_angular_vel * (base_width / 2.0)) * sin(robot_angular_pos);
     robot_x_pos = robot_x_pos + robot_x_vel * dtime;
@@ -235,7 +235,7 @@ void velCallback(const geometry_msgs::Twist &vel) {
     float right = -1.0 * encoder_click_per_meter * vr;
     float left = encoder_click_per_meter * vl;
 
-    cmd = RIGHT_AXIS.append"axis1.controller.vel_setpoint");
+    cmd = RIGHT_AXIS.append("axis1.controller.vel_setpoint");
     writeOdriveData(endpoint, odrive_json,
                     cmd, right);
 
