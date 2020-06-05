@@ -145,10 +145,11 @@ ros_odrive::odrive_msg publishMessage(ros::Publisher odrive_pub) {
 
 void resetOdometry(){
     ROS_INFO("Reset odometry");
-    wheel_R_ang_vel = getAngularPos(RIGHT_AXIS);
-    wheel_L_ang_vel = getAngularPos(LEFT_AXIS);
-    wheel_L_ang_pos = 0.0;
-    wheel_R_ang_pos = 0.0;
+    wheel_L_ang_pos = getAngularPos(LEFT_AXIS);
+    wheel_R_ang_pos = getAngularPos(RIGHT_AXIS);
+
+    wheel_R_ang_vel = 0.0;
+    wheel_L_ang_vel = 0.0;
     robot_angular_vel = 0.0;
     robot_angular_pos = 0.0;
     robot_x_vel = 0.0;
@@ -367,9 +368,6 @@ int main(int argc, char **argv) {
         updateTargetConfig(endpoint, odrive_json, od_cfg);
     }
 
-    current_time = ros::Time::now();
-    last_time = ros::Time::now();
-
     setPID(0.04, 0.15);
 
     resetOdometry();
@@ -377,11 +375,15 @@ int main(int argc, char **argv) {
     // Example loop - reading values and updating motor velocity
     ROS_INFO("Starting idle loop");
     int diagnostics_barrier = 0;
+
+    current_time = ros::Time::now();
+    last_time = ros::Time::now();
+
     while (ros::ok()) {
         // Publish status message
-        current_time = ros::Time::now();
         ros_odrive::odrive_msg odrive_msg = publishMessage(odrive_pub);
         // Publish odometry message
+        current_time = ros::Time::now();
         publishOdometry(odrive_odometry, odrive_msg, odom_broadcaster, current_time, last_time);
         last_time = current_time;
 
