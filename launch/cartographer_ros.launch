@@ -5,7 +5,6 @@
           -configuration_basename husky.lua"
           output="screen">
         <remap from="echoes" to="horizontal_laser_2d" />
-        <remap from="odom" to="/ros_odrive/odom"/>
     </node>
 
     <node name="cartographer_occupancy_grid_node" pkg="cartographer_ros"
