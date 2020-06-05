@@ -12,9 +12,6 @@
         <color rgba="0 0 0 1"/>
     </material>
 
-    <link name="base_footprint">
-    </link>
-
     <link name="base_link">
         <visual>
             <geometry>
@@ -30,6 +27,10 @@
             <origin rpy="0 0 0" xyz="0.20 0 0.20"/>
         </collision>
     </link>
+
+    <link name="base_footprint">
+    </link>
+
 
     <link name="cover">
         <visual>
@@ -112,8 +113,8 @@
     </joint>
 
     <joint name="base_footprint_joint" type="fixed">
-        <parent link="base_footprint"/>
-        <child link="base_link"/>
+        <parent link="base_link"/>
+        <child link="base_footprint"/>
         <origin xyz="0 0 0" rpy="0 0 0"/>
     </joint>
 
