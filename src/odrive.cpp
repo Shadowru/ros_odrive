@@ -38,9 +38,9 @@ double robot_y_pos;
 sensor_msgs::JointState joint_states;
 
 //creating the arrays for the message
-double pos[] = {0, 0};
-double vel[] = {0, 0};
-double eff[] = {0, 0};
+vector<double> pos(2, 0.0);
+vector<double> vel(2, 0.0);
+vector<double> eff(2, 0.0);
 
 
 void msgCallback(const ros_odrive::odrive_ctrl::ConstPtr &msg) {
@@ -371,19 +371,13 @@ int main(int argc, char **argv) {
     //assigning the arrays to the message
     vector<std::string> joints_name(2, "");
     joints_name[0]= "left_wheel_hinge";
-    joints_name[1]= ""right_wheel_hinge";
+    joints_name[1]= "right_wheel_hinge";
 
     joint_states.name = joints_name;
 
     joint_states.position = pos;
     joint_states.velocity = vel;
     joint_states.effort = eff;
-
-    //setting the length
-    joint_states.name_length = 2;
-    joint_states.position_length = 2;
-    joint_states.velocity_length = 2;
-    joint_states.effort_length = 2;
 
     ros::Subscriber odrive_sub = nh.subscribe("odrive_ctrl", 10, msgCallback);
 
