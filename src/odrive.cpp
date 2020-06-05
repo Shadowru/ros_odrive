@@ -107,7 +107,7 @@ float readLeftWheelEncoder()
 
 
 double getAngularPos(std::string axis){
-    return ang_pos = coeff * readWheelEncoder(axis);
+    return coeff * readWheelEncoder(axis);
 }
 
 /**
