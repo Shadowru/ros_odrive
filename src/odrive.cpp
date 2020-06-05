@@ -254,8 +254,8 @@ void publishOdometry(ros::Publisher odometry_pub, const ros_odrive::odrive_msg o
     robot_x_vel = ((wheel_L_ang_vel * wheel_radius + robot_angular_vel * (base_width / 2.0)) * cos(robot_angular_pos));
     robot_y_vel = ((wheel_L_ang_vel * wheel_radius + robot_angular_vel * (base_width / 2.0)) * sin(robot_angular_pos));
 
-    robot_x_pos = robot_x_pos + modificator * robot_x_vel * dtime;
-    robot_y_pos = robot_y_pos + modificator * robot_y_vel * dtime;
+    robot_x_pos = robot_x_pos + robot_x_vel * dtime;
+    robot_y_pos = robot_y_pos + robot_y_vel * dtime;
 
     // send odometry
     sendOdometry(odom_broadcaster, odometry_pub);
