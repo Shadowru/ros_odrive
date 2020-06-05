@@ -144,6 +144,8 @@ void sendOdometry(double delta_x, double delta_y, double delta_th, double dt, tf
     double vx = delta_x / dt;
     double vy = delta_y / dt;
 
+    double vth = delta_th / dt;
+
     //since all odometry is 6DOF we'll need a quaternion created from yaw
     geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromYaw(th);
 
