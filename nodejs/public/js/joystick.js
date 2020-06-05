@@ -62,8 +62,8 @@ function createJoystick(x, y, d) {
         }
         // 0,25 m/s max speed
         // 0,5 rad/s max rotation speed
-        lin = Math.cos(direction / 57.29) * 0.25 * nipple.distance / max_joy_pos;
-        ang = Math.sin(direction / 57.29) * 0.5 * nipple.distance / max_joy_pos;
+        lin = Math.cos(direction / 57.29) * 0.05 * nipple.distance / max_joy_pos;
+        ang = Math.sin(direction / 57.29) * 0.05 * nipple.distance / max_joy_pos;
         clearTimeout(joystick_timeout);
         moveAction(lin, ang);
         joystick_timeout = setTimeout(function () { repeat_velcmd(lin, ang); }, velocity_repeat_delay);
