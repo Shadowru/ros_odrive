@@ -213,19 +213,31 @@ void publishOdometry(ros::Publisher odometry_pub, const ros_odrive::odrive_msg o
 
     double right_left = dt_right_meter - dt_left_meter;
 
-    double a = base_width * (dt_right_meter + dt_left_meter) * 0.5 / right_left;
+    double vx = 0.0;
+    double vy = 0.0;
+    double vtheta = 0.0;
 
-    double cos_current = cos(th_pose);
-    double sin_current = sin(th_pose);
+    if(right_left != 0.0){
 
-    double fraction = right_left / base_width;
-    if(isnan(fraction)){
-        ROS_ERROR("fraction is nan");
+        double a = base_width * (dt_right_meter + dt_left_meter) * 0.5 / right_left;
+
+        double cos_current = cos(th_pose);
+        double sin_current = sin(th_pose);
+
+        double fraction = right_left / base_width;
+        if(isnan(fraction)){
+            ROS_ERROR("fraction is nan");
+        }
+        vx = a * (sin(fraction + th_pose) - sin_current);
+        if(isnan(fraction)){
+            ROS_ERROR("vx is nan");
+        }
+        vy = -a * (cos(fraction + th_pose) - cos_current);
+        if(isnan(fraction)){
+            ROS_ERROR("vy is nan");
+        }
+        vtheta = fraction;
     }
-    double vx = a * (sin(fraction + th_pose) - sin_current);
-    double vy = -a * (cos(fraction + th_pose) - cos_current);
-    double vtheta = fraction;
-
     // send odometry
     double dt = (current_time - last_time).toSec();
     sendOdometry(vx, vy, vtheta, dt, odom_broadcaster, odometry_pub);
