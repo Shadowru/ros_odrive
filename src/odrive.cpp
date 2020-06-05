@@ -170,7 +170,7 @@ void sendOdometry(tf::TransformBroadcaster odom_broadcaster, ros::Publisher odom
 
     //first, we'll publish the transform over tf
     geometry_msgs::TransformStamped odom_trans;
-    odom_trans.header.stamp = ros::Time::now();//current_time;
+    odom_trans.header.stamp = current_time;
     odom_trans.header.frame_id = "odom";
     odom_trans.child_frame_id = "base_link";
 
@@ -184,7 +184,7 @@ void sendOdometry(tf::TransformBroadcaster odom_broadcaster, ros::Publisher odom
 
     //next, we'll publish the odometry message over ROS
     nav_msgs::Odometry odom;
-    odom.header.stamp = ros::Time::now();//current_time;
+    odom.header.stamp = current_time;
     odom.header.frame_id = "odom";
 
     //set the position
