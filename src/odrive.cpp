@@ -193,6 +193,18 @@ void publishOdometry(ros::Publisher odometry_pub, const ros_odrive::odrive_msg o
     left_encoder = current_left_encoder;
     right_encoder = current_right_encoder;
 
+    float dt_left_meter = dt_left_encoder / encoder_click_per_meter;
+    float dt_right_meter = -1.0 * (dt_right_encoder / encoder_click_per_meter);
+
+    double right_left = dt_right_meter - dt_left_meter;
+
+    double a = base_width * (dt_right_meter + dt_left_meter) * 0.5 / right_left;
+
+    double fraction = right_left / base_width;
+    double vx = a * (sin(fraction + theta) - sin_current);
+    double vy = -a * (cos(fraction + theta) - cos_current);
+    double vtheta = fraction;
+
     // send odometry
     double dt = (current_time - last_time).toSec();
     sendOdometry(vx, vy, th, dt, tf::TransformBroadcaster odom_broadcaster, ros::Publisher odometry_pub);
@@ -349,7 +361,7 @@ int main(int argc, char **argv) {
     right_encoder = readRightWheelEncoder();
     left_encoder = readLeftWheelEncoder();
 
-    ROS_INFO("Start pos : Axis0 : %f , Axis1 : %f", left_pos, right_pos);
+    ROS_INFO("Start pos : Axis0 : %f , Axis1 : %f", left_encoder, right_encoder);
 
     setPID(0.04, 0.15);
 
