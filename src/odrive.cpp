@@ -21,6 +21,9 @@ double coeff;
 
 ros::Time current_time, last_time;
 
+double raw_wheel_L_ang_vel;
+double raw_wheel_R_ang_vel;
+
 double wheel_L_ang_vel;
 double wheel_R_ang_vel;
 double wheel_L_ang_pos;
@@ -144,8 +147,11 @@ ros_odrive::odrive_msg publishMessage(ros::Publisher odrive_pub) {
 
 void resetOdometry(){
     ROS_INFO("Reset odometry");
-    wheel_L_ang_pos = getAngularPos(LEFT_AXIS);
-    wheel_R_ang_pos = getAngularPos(RIGHT_AXIS);
+    raw_wheel_L_ang_pos = getAngularPos(LEFT_AXIS);
+    raw_wheel_R_ang_pos = getAngularPos(RIGHT_AXIS);
+
+    wheel_L_ang_pos = raw_wheel_L_ang_pos;
+    wheel_R_ang_pos = raw_wheel_R_ang_pos;
 
     wheel_R_ang_vel = 0.0;
     wheel_L_ang_vel = 0.0;
@@ -205,13 +211,18 @@ void publishOdometry(ros::Publisher odometry_pub, const ros_odrive::odrive_msg o
     double curr_wheel_L_ang_pos = getAngularPos(LEFT_AXIS);
     double dtime = (current_time - last_time).toSec();
 
-    double delta_L_ang_pos = -1.0 * (curr_wheel_L_ang_pos - wheel_L_ang_pos);
-    double delta_R_ang_pos = curr_wheel_R_ang_pos - wheel_R_ang_pos;
+    double delta_L_ang_pos = -1.0 * (curr_wheel_L_ang_pos - raw_wheel_L_ang_pos);
+    double delta_R_ang_pos = curr_wheel_R_ang_pos - raw_wheel_R_ang_pos;
+
+    raw_wheel_L_ang_pos = curr_wheel_L_ang_pos;
+    raw_wheel_R_ang_pos = curr_wheel_R_ang_pos;
 
     wheel_L_ang_vel = delta_L_ang_pos / (dtime);
     wheel_R_ang_vel = delta_R_ang_pos / (dtime);
-    wheel_L_ang_pos = wheel_L_ang_pos + delta_L_ang_pos;
+
+    raw_wheel_L_ang_pos = wheel_L_ang_pos + delta_L_ang_pos;
     wheel_R_ang_pos = wheel_R_ang_pos + delta_R_ang_pos;
+
     robot_angular_vel = (((wheel_R_ang_pos - wheel_L_ang_pos) * wheel_radius / base_width) - robot_angular_pos) / dtime;
     robot_angular_pos = (wheel_R_ang_pos - wheel_L_ang_pos) * wheel_radius / base_width;
     robot_x_vel = (wheel_L_ang_vel * wheel_radius + robot_angular_vel * (base_width / 2.0)) * cos(robot_angular_pos);
