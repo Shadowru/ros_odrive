@@ -38,9 +38,9 @@ double robot_y_pos;
 sensor_msgs::JointState joint_states;
 
 //creating the arrays for the message
-float pos[] = {0, 0};
-float vel[] = {0, 0};
-float eff[] = {0, 0};
+double pos[] = {0, 0};
+double vel[] = {0, 0};
+double eff[] = {0, 0};
 
 
 void msgCallback(const ros_odrive::odrive_ctrl::ConstPtr &msg) {
