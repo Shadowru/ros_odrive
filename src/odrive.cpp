@@ -106,7 +106,7 @@ float readLeftWheelEncoder()
 }
 
 
-double getAngularPos(std:string axis){
+double getAngularPos(std::string axis){
     return coeff * readWheelEncoder(axis);
 }
 
@@ -202,7 +202,7 @@ void publishOdometry(ros::Publisher odometry_pub, const ros_odrive::odrive_msg o
 
     double curr_wheel_R_ang_pos = getAngularPos(RIGHT_AXIS);
     double curr_wheel_L_ang_pos = getAngularPos(LEFT_AXIS);
-    double dtime = current_time - last_time.toSeс();
+    double dtime = current_time - last_time.toSec();
 
     wheel_L_ang_vel = (curr_wheel_L_ang_pos - wheel_L_ang_pos) / (dtime);
     wheel_R_ang_vel = (curr_wheel_R_ang_pos - wheel_R_ang_pos) / (dtime);
@@ -368,9 +368,6 @@ int main(int argc, char **argv) {
 
     current_time = ros::Time::now();
     last_time = ros::Time::now();
-
-
-    ROS_INFO("Start pos : Axis0 : %f , Axis1 : %f", left_encoder, right_encoder);
 
     setPID(0.04, 0.15);
 
