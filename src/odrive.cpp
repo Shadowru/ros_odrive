@@ -366,7 +366,7 @@ int main(int argc, char **argv) {
 
     ros::Publisher odrive_odometry = nh.advertise<nav_msgs::Odometry>("odometry", 10);
 
-    ros::Publisher joint_state_pub = nh.advertise<sensor_msgs::JointState>("/joint_states", 10);
+    ros::Publisher joint_state_pub = nh.advertise<sensor_msgs::JointState>("joint_states", 10);
 
 	joint_states.header.frame_id = "base_link";
 
