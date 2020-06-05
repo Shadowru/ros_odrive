@@ -360,9 +360,7 @@ int main(int argc, char **argv) {
 
     encoder_click_per_meter = encoder_click_per_rotate / wheel_circum;
 
-    ros::Publisher odrive_pub = nh.advertise<ros_odrive::odrive_msg>("odrive_msg_" + od_sn, 100);
-
-    ros::Publisher odrive_odometry = nh.advertise<nav_msgs::Odometry>("odometry", 10);
+    ros::Publisher odrive_pub = nh.advertise<ros_odrive::odrive_msg>("odrive_msg_" + od_sn, 10);
 
     ros::Publisher odrive_odometry = nh.advertise<nav_msgs::Odometry>("odometry", 10);
 
@@ -371,8 +369,8 @@ int main(int argc, char **argv) {
 	joint_states.header.frame_id = "base_link";
 
     //assigning the arrays to the message
-    char *name[] = {"left_wheel_hinge", "right_wheel_hinge"};
-    joint_states.name = name;
+    std::string joints_name[] = {"left_wheel_hinge", "right_wheel_hinge"};
+    joint_states.name = joints_name;
 
     joint_states.position = pos;
     joint_states.velocity = vel;
