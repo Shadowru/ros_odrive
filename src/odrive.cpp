@@ -146,9 +146,9 @@ void sendOdometry(double delta_x, double delta_y, double delta_th, double dt, tf
     double delta_y = (vx * sin(th) + vy * cos(th)) * dt;
     double delta_th = vth * dt;
 */
-    x_pose += delta_x;
-    y_pose += delta_y;
-    th_pose += delta_th;
+    x_pose += 0.001;//delta_x;
+    y_pose += 0.001;//delta_y;
+    th_pose += 0.001;//delta_th;
 
     double vx = delta_x / dt;
     double vy = delta_y / dt;
