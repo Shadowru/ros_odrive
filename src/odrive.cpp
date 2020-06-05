@@ -178,8 +178,8 @@ void sendOdometry(double delta_x, double delta_y, double delta_th, double dt, tf
     odom.header.frame_id = "odom";
 
     //set the position
-    odom.pose.pose.position.x = x;
-    odom.pose.pose.position.y = y;
+    odom.pose.pose.position.x = x_pose;
+    odom.pose.pose.position.y = y_pose;
     odom.pose.pose.position.z = 0.0;
     odom.pose.pose.orientation = odom_quat;
 
@@ -215,8 +215,8 @@ void publishOdometry(ros::Publisher odometry_pub, const ros_odrive::odrive_msg o
 
     double a = base_width * (dt_right_meter + dt_left_meter) * 0.5 / right_left;
 
-    double cos_current = cos(th);
-    double sin_current = sin(th);
+    double cos_current = cos(th_pose);
+    double sin_current = sin(th_pose);
 
     double fraction = right_left / base_width;
     double vx = a * (sin(fraction + th) - sin_current);
