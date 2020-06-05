@@ -35,6 +35,16 @@ double robot_y_vel;
 double robot_x_pos;
 double robot_y_pos;
 
+sensor_msgs::JointState joint_states;
+ros::Publisher *joint_state_pub;
+
+//creating the arrays for the message
+char *name[] = {"left_wheel_hinge", "right_wheel_hinge"};
+float pos[] = {0, 0};
+float vel[] = {0, 0};
+float eff[] = {0, 0};
+
+
 void msgCallback(const ros_odrive::odrive_ctrl::ConstPtr &msg) {
     std::string cmd;
     uint8_t u8val;
@@ -162,6 +172,35 @@ void resetOdometry(){
     robot_x_pos = 0.0;
     robot_y_pos = 0.0;
 };
+
+void initJointStatePublisher(ros::NodeHandle nh)
+{
+	joint_state_pub = new ros::Publisher("/joint_states", &joint_states);
+	nh.advertise(*joint_state_pub);
+
+	joint_states.header.frame_id = "base_link";
+
+    //assigning the arrays to the message
+    joint_states.name = name;
+    joint_states.position = pos;
+    joint_states.velocity = vel;
+    joint_states.effort = eff;
+
+    //setting the length
+    joint_states.name_length = 2;
+    joint_states.position_length = 2;
+    joint_states.velocity_length = 2;
+    joint_states.effort_length = 2;
+}
+
+void publishJointState(){
+    pos[0] = wheel_L_ang_pos;
+	pos[1] = wheel_R_ang_pos;
+
+	joint_states.position = pos;
+	joint_states.header.stamp = current_time;
+	joint_state_pub->publish(&joint_states);
+}
 
 void sendOdometry(tf::TransformBroadcaster odom_broadcaster, ros::Publisher odometry_pub){
 
@@ -343,6 +382,7 @@ int main(int argc, char **argv) {
 
     encoder_click_per_meter = encoder_click_per_rotate / wheel_circum;
 
+
     ros::Publisher odrive_pub = nh.advertise<ros_odrive::odrive_msg>("odrive_msg_" + od_sn, 100);
 
     ros::Publisher odrive_odometry = nh.advertise<nav_msgs::Odometry>("odometry", 100);
@@ -384,6 +424,8 @@ int main(int argc, char **argv) {
     setPID(0.04, 0.15);
 
     resetOdometry();
+
+    initJointStatePublisher(nh);
 
     // Example loop - reading values and updating motor velocity
     ROS_INFO("Starting idle loop");
