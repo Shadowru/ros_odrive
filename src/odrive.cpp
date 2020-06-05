@@ -208,7 +208,7 @@ void publishOdometry(ros::Publisher odometry_pub, const ros_odrive::odrive_msg o
     left_encoder = current_left_encoder;
     right_encoder = current_right_encoder;
 
-    float dt_left_meter = -1.0 * dt_left_encoder / encoder_click_per_meter;
+    float dt_left_meter = -1.0 * ( dt_left_encoder / encoder_click_per_meter);
     float dt_right_meter = (dt_right_encoder / encoder_click_per_meter);
 
     double right_left = dt_right_meter - dt_left_meter;
@@ -228,11 +228,11 @@ void publishOdometry(ros::Publisher odometry_pub, const ros_odrive::odrive_msg o
         if(isnan(fraction)){
             ROS_ERROR("fraction is nan");
         }
-        vx = a * (sin(fraction + th_pose) - sin_current);
+        vy = a * (sin(fraction + th_pose) - sin_current);
         if(isnan(fraction)){
             ROS_ERROR("vx is nan");
         }
-        vy = -a * (cos(fraction + th_pose) - cos_current);
+        vx = -a * (cos(fraction + th_pose) - cos_current);
         if(isnan(fraction)){
             ROS_ERROR("vy is nan");
         }
@@ -344,7 +344,7 @@ int main(int argc, char **argv) {
     //test robot width
     nh.param<float>("base_width", base_width, 0.58);
     nh.param<float>("wheel_radius", wheel_radius, 0.235 / 2);
-    nh.param("encoder_click_per_rotate", encoder_click_per_rotate, 90);
+    nh.param("encoder_click_per_rotate", encoder_click_per_rotate, 45);
 
     wheel_circum = 2.0 * wheel_radius * M_PI;
     encoder_click_per_meter = encoder_click_per_rotate / wheel_circum;
