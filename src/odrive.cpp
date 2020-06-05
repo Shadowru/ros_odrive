@@ -229,7 +229,7 @@ void publishOdometry(ros::Publisher odometry_pub, const ros_odrive::odrive_msg o
     double dtime = (current_time - last_time).toSec();
 
     double delta_L_ang_pos = curr_wheel_L_ang_pos - raw_wheel_L_ang_pos;
-    double delta_R_ang_pos = curr_wheel_R_ang_pos - raw_wheel_R_ang_pos;
+    double delta_R_ang_pos = curr_wheel_R_ang_pos + raw_wheel_R_ang_pos;
 
     raw_wheel_L_ang_pos = curr_wheel_L_ang_pos;
     raw_wheel_R_ang_pos = curr_wheel_R_ang_pos;
