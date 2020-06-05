@@ -153,32 +153,6 @@ ros_odrive::odrive_msg publishMessage(ros::Publisher odrive_pub) {
     return msg;
 }
 
-void resetOdometry(){
-    ROS_INFO("Reset odometry");
-    raw_wheel_L_ang_pos = getAngularPos(LEFT_AXIS);
-    raw_wheel_R_ang_pos = getAngularPos(RIGHT_AXIS);
-
-    wheel_L_ang_pos = raw_wheel_L_ang_pos;
-    wheel_R_ang_pos = raw_wheel_R_ang_pos;
-
-    wheel_R_ang_vel = 0.0;
-    wheel_L_ang_vel = 0.0;
-    robot_angular_vel = 0.0;
-    robot_angular_pos = 0.0;
-    robot_x_vel = 0.0;
-    robot_y_vel = 0.0;
-    robot_x_pos = 0.0;
-    robot_y_pos = 0.0;
-};
-
-void publishJointState(ros::Publisher joint_state_pub){
-    pos[0] = wheel_L_ang_pos;
-	pos[1] = wheel_R_ang_pos;
-
-	joint_states.position = pos;
-	joint_states.header.stamp = current_time;
-	joint_state_pub.publish(joint_states);
-}
 
 void sendOdometry(tf::TransformBroadcaster odom_broadcaster, ros::Publisher odometry_pub){
 
@@ -220,16 +194,44 @@ void sendOdometry(tf::TransformBroadcaster odom_broadcaster, ros::Publisher odom
     odometry_pub.publish(odom);
 }
 
+
+void publishJointState(ros::Publisher joint_state_pub){
+    pos[0] = wheel_L_ang_pos;
+	pos[1] = wheel_R_ang_pos;
+
+	joint_states.position = pos;
+	joint_states.header.stamp = current_time;
+	joint_state_pub.publish(joint_states);
+}
+
+void resetOdometry(){
+    ROS_INFO("Reset odometry");
+    raw_wheel_L_ang_pos = getAngularPos(LEFT_AXIS);
+    raw_wheel_R_ang_pos = getAngularPos(RIGHT_AXIS);
+
+    wheel_L_ang_pos = 0.0;
+    wheel_R_ang_pos = 0.0;
+
+    wheel_R_ang_vel = 0.0;
+    wheel_L_ang_vel = 0.0;
+    robot_angular_vel = 0.0;
+    robot_angular_pos = 0.0;
+    robot_x_vel = 0.0;
+    robot_y_vel = 0.0;
+    robot_x_pos = 0.0;
+    robot_y_pos = 0.0;
+};
+
 void publishOdometry(ros::Publisher odometry_pub, const ros_odrive::odrive_msg odrive_msg,
                      tf::TransformBroadcaster odom_broadcaster, const ros::Time current_time,
                      const ros::Time last_time) {
 
-    double curr_wheel_R_ang_pos = getAngularPos(RIGHT_AXIS);
     double curr_wheel_L_ang_pos = getAngularPos(LEFT_AXIS);
+    double curr_wheel_R_ang_pos = getAngularPos(RIGHT_AXIS);
     double dtime = (current_time - last_time).toSec();
 
     double delta_L_ang_pos = curr_wheel_L_ang_pos - raw_wheel_L_ang_pos;
-    double delta_R_ang_pos = curr_wheel_R_ang_pos + raw_wheel_R_ang_pos;
+    double delta_R_ang_pos = curr_wheel_R_ang_pos - raw_wheel_R_ang_pos;
 
     raw_wheel_L_ang_pos = curr_wheel_L_ang_pos;
     raw_wheel_R_ang_pos = curr_wheel_R_ang_pos;
