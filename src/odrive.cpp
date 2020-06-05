@@ -80,12 +80,12 @@ void msgCallback(const ros_odrive::odrive_ctrl::ConstPtr &msg) {
 }
 
 
-float readRightWheelEncoder();
+float readRightWheelEncoder()
 {
     return readWheelEncoder("axis1");
 }
 
-float readLeftWheelEncoder();
+float readLeftWheelEncoder()
 {
     return readWheelEncoder("axis0");
 }
@@ -186,7 +186,11 @@ void publishOdometry(ros::Publisher odometry_pub, const ros_odrive::odrive_msg o
 
     // calc delta
     float dt_left_encoder = current_left_encoder - left_encoder;
-    float dt_right_encoder = current_right_encoder - dt_right_encoder;
+    float dt_right_encoder = current_right_encoder - right_encoder;
+
+    // set values
+    left_encoder = current_left_encoder;
+    right_encoder = current_right_encoder;
 
     // send odometry
     double dt = (current_time - last_time).toSec();
