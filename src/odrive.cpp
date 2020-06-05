@@ -39,7 +39,6 @@ sensor_msgs::JointState joint_states;
 ros::Publisher *joint_state_pub;
 
 //creating the arrays for the message
-char *name[] = {"left_wheel_hinge", "right_wheel_hinge"};
 float pos[] = {0, 0};
 float vel[] = {0, 0};
 float eff[] = {0, 0};
@@ -175,12 +174,14 @@ void resetOdometry(){
 
 void initJointStatePublisher(ros::NodeHandle nh)
 {
-    joint_state_pub = nh.advertise<sensor_msgs::JointState>("/joint_states" + od_sn, 10);
+    joint_state_pub = nh.advertise<sensor_msgs::JointState>("/joint_states", 10);
 
 	joint_states.header.frame_id = "base_link";
 
     //assigning the arrays to the message
+    char *name[] = {"left_wheel_hinge", "right_wheel_hinge"};
     joint_states.name = name;
+
     joint_states.position = pos;
     joint_states.velocity = vel;
     joint_states.effort = eff;
