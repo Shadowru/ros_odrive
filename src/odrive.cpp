@@ -130,15 +130,19 @@ ros_odrive::odrive_msg publishMessage(ros::Publisher odrive_pub) {
     return msg;
 }
 
-void sendOdometry(double vx, double vy, double vth, double dt, tf::TransformBroadcaster odom_broadcaster, ros::Publisher odometry_pub){
+void sendOdometry(double delta_x, double delta_y, double delta_th, double dt, tf::TransformBroadcaster odom_broadcaster, ros::Publisher odometry_pub){
 
+/*
     double delta_x = (vx * cos(th) - vy * sin(th)) * dt;
     double delta_y = (vx * sin(th) + vy * cos(th)) * dt;
     double delta_th = vth * dt;
-
+*/
     x += delta_x;
     y += delta_y;
     th += delta_th;
+
+    double vx = delta_x / dt;
+    double vy = delta_y / dt;
 
     //since all odometry is 6DOF we'll need a quaternion created from yaw
     geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromYaw(th);
