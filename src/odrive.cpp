@@ -210,7 +210,7 @@ void publishOdometry(ros::Publisher odometry_pub, const ros_odrive::odrive_msg o
 
     // send odometry
     double dt = (current_time - last_time).toSec();
-    sendOdometry(vx, vy, vtheta, dt, tf::TransformBroadcaster odom_broadcaster, ros::Publisher odometry_pub);
+    sendOdometry(vx, vy, vtheta, dt, odom_broadcaster, odometry_pub);
 }
 
 void velCallback(const geometry_msgs::Twist &vel) {
