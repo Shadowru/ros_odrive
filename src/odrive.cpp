@@ -175,7 +175,7 @@ void sendOdometry(double vx, double vy, double th, double dt, tf::TransformBroad
     odom.twist.twist.angular.z = vth;
 
     //publish the message
-    odom_pub.publish(odom);
+    odometry_pub.publish(odom);
 }
 
 void publishOdometry(ros::Publisher odometry_pub, const ros_odrive::odrive_msg odrive_msg,
