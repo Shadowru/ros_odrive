@@ -130,7 +130,7 @@ ros_odrive::odrive_msg publishMessage(ros::Publisher odrive_pub) {
     return msg;
 }
 
-void sendOdometry(double vx, double vy, double th, double dt, tf::TransformBroadcaster odom_broadcaster, ros::Publisher odometry_pub){
+void sendOdometry(double vx, double vy, double vth, double dt, tf::TransformBroadcaster odom_broadcaster, ros::Publisher odometry_pub){
 
     double delta_x = (vx * cos(th) - vy * sin(th)) * dt;
     double delta_y = (vx * sin(th) + vy * cos(th)) * dt;
@@ -207,7 +207,7 @@ void publishOdometry(ros::Publisher odometry_pub, const ros_odrive::odrive_msg o
 
     // send odometry
     double dt = (current_time - last_time).toSec();
-    sendOdometry(vx, vy, th, dt, tf::TransformBroadcaster odom_broadcaster, ros::Publisher odometry_pub);
+    sendOdometry(vx, vy, vtheta, dt, tf::TransformBroadcaster odom_broadcaster, ros::Publisher odometry_pub);
 }
 
 void velCallback(const geometry_msgs::Twist &vel) {
