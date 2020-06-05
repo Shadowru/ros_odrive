@@ -430,6 +430,7 @@ int main(int argc, char **argv) {
         // Publish odometry message
         current_time = ros::Time::now();
         publishOdometry(odrive_odometry, odrive_msg, odom_broadcaster, current_time, last_time);
+        publishJointState();
         last_time = current_time;
 
         // idle loop
