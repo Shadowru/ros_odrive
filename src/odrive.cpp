@@ -175,7 +175,7 @@ void sendOdometry(tf::TransformBroadcaster odom_broadcaster, ros::Publisher odom
     odom_trans.child_frame_id = "base_link";
 
     odom_trans.transform.translation.x = robot_x_pos;
-    odom_trans.transform.translation.y = robot_y_vel;
+    odom_trans.transform.translation.y = robot_y_pos;
     odom_trans.transform.translation.z = 0.0;
     odom_trans.transform.rotation = odom_quat;
 
@@ -189,7 +189,7 @@ void sendOdometry(tf::TransformBroadcaster odom_broadcaster, ros::Publisher odom
 
     //set the position
     odom.pose.pose.position.x = robot_x_pos;
-    odom.pose.pose.position.y = robot_y_vel;
+    odom.pose.pose.position.y = robot_y_pos;
     odom.pose.pose.position.z = 0.0;
     odom.pose.pose.orientation = odom_quat;
 
