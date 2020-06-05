@@ -219,8 +219,8 @@ void publishOdometry(ros::Publisher odometry_pub, const ros_odrive::odrive_msg o
     double sin_current = sin(th_pose);
 
     double fraction = right_left / base_width;
-    double vx = a * (sin(fraction + th) - sin_current);
-    double vy = -a * (cos(fraction + th) - cos_current);
+    double vx = a * (sin(fraction + th_pose) - sin_current);
+    double vy = -a * (cos(fraction + th_pose) - cos_current);
     double vtheta = fraction;
 
     // send odometry
