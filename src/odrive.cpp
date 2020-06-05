@@ -208,8 +208,8 @@ void publishOdometry(ros::Publisher odometry_pub, const ros_odrive::odrive_msg o
     left_encoder = current_left_encoder;
     right_encoder = current_right_encoder;
 
-    float dt_left_meter = dt_left_encoder / encoder_click_per_meter;
-    float dt_right_meter = -1.0 * (dt_right_encoder / encoder_click_per_meter);
+    float dt_left_meter = -1.0 * dt_left_encoder / encoder_click_per_meter;
+    float dt_right_meter = (dt_right_encoder / encoder_click_per_meter);
 
     double right_left = dt_right_meter - dt_left_meter;
 

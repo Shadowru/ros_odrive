@@ -20,3 +20,6 @@ roslaunch rtabmap_ros rtabmap.launch rtabmap_args:="--delete_db_on_start" rtabma
 roslaunch ros_odrive rosgolf.launch
 
 roslaunch ros_odrive hector_slam.launch
+
+rostopic pub -1 /ros_odrive/odrive_ctrl ros_odrive/odrive_ctrl 1 0 0
+rostopic pub -1 /ros_odrive/odrive_ctrl ros_odrive/odrive_ctrl 1 1 0
