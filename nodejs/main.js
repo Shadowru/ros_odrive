@@ -62,7 +62,7 @@ http.listen(8080, function () {
 
 rosnodejs.initNode('/rosnodejs')
     .then((rosNode) => {
-        cmd_vel_publisher = rosNode.advertise('/cmd_vel', geometry_msgs.Twist, default_publisher_options);
+        cmd_vel_publisher = rosNode.advertise('/ros_odrive/cmd_vel', geometry_msgs.Twist, default_publisher_options);
     })
     .catch((err) => {
         rosnodejs.log.error(err.stack);
