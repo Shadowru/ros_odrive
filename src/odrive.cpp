@@ -2,6 +2,9 @@
 
 using namespace std;
 
+std::string LEFT_AXIS = "axis0";
+std::string RIGHT_AXIS = "axis1";
+
 Json::Value odrive_json;
 bool targetJsonValid = false;
 odrive_endpoint *endpoint = NULL;
@@ -14,15 +17,20 @@ float wheel_radius;
 // Calculated values
 float wheel_circum;
 float encoder_click_per_meter;
+double coeff;
 
 ros::Time current_time, last_time;
 
-double x_pose;
-double y_pose;
-double th_pose;
-
-float right_encoder;
-float left_encoder;
+double wheel_L_ang_vel;
+double wheel_R_ang_vel;
+double wheel_L_ang_pos;
+double wheel_R_ang_pos;
+double robot_angular_vel;
+double robot_angular_pos;
+double robot_x_vel;
+double robot_y_vel;
+double robot_x_pos;
+double robot_y_pos;
 
 void msgCallback(const ros_odrive::odrive_ctrl::ConstPtr &msg) {
     std::string cmd;
@@ -89,14 +97,18 @@ float readWheelEncoder(string axis){
 
 float readRightWheelEncoder()
 {
-    return readWheelEncoder("axis1");
+    return readWheelEncoder(RIGHT_AXIS);
 }
 
 float readLeftWheelEncoder()
 {
-    return readWheelEncoder("axis0");
+    return readWheelEncoder(LEFT_AXIS);
 }
 
+
+double getAngularPos(std:string axis){
+    return coeff * readWheelEncoder(axis);
+}
 
 /**
  *
@@ -132,31 +144,22 @@ ros_odrive::odrive_msg publishMessage(ros::Publisher odrive_pub) {
 
 void resetOdometry(){
     ROS_INFO("Reset odometry");
-    right_encoder = readRightWheelEncoder();
-    left_encoder = readLeftWheelEncoder();
-    x_pose = 0.0;
-    y_pose = 0.0;
-    th_pose = 0.0;
+    wheel_R_ang_vel = getAngularPos(RIGHT_AXIS);
+    wheel_L_ang_vel = getAngularPos(LEFT_AXIS);
+    wheel_L_ang_pos = 0.0;
+    wheel_R_ang_pos = 0.0;
+    robot_angular_vel = 0.0;
+    robot_angular_pos = 0.0;
+    robot_x_vel = 0.0;
+    robot_y_vel = 0.0;
+    robot_x_pos = 0.0;
+    robot_y_pos = 0.0;
 };
 
-void sendOdometry(double delta_x, double delta_y, double delta_th, double dt, tf::TransformBroadcaster odom_broadcaster, ros::Publisher odometry_pub){
-
-/*
-    double delta_x = (vx * cos(th) - vy * sin(th)) * dt;
-    double delta_y = (vx * sin(th) + vy * cos(th)) * dt;
-    double delta_th = vth * dt;
-*/
-    x_pose += delta_x;
-    y_pose += delta_y;
-    th_pose += delta_th;
-
-    double vx = delta_x / dt;
-    double vy = delta_y / dt;
-
-    double vth = delta_th / dt;
+void sendOdometry(tf::TransformBroadcaster odom_broadcaster, ros::Publisher odometry_pub){
 
     //since all odometry is 6DOF we'll need a quaternion created from yaw
-    geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromYaw(th_pose);
+    geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromYaw(robot_angular_pos);
 
     //first, we'll publish the transform over tf
     geometry_msgs::TransformStamped odom_trans;
@@ -164,8 +167,8 @@ void sendOdometry(double delta_x, double delta_y, double delta_th, double dt, tf
     odom_trans.header.frame_id = "odom";
     odom_trans.child_frame_id = "base_link";
 
-    odom_trans.transform.translation.x = x_pose;
-    odom_trans.transform.translation.y = y_pose;
+    odom_trans.transform.translation.x = robot_x_pos;
+    odom_trans.transform.translation.y = robot_y_vel;
     odom_trans.transform.translation.z = 0.0;
     odom_trans.transform.rotation = odom_quat;
 
@@ -178,16 +181,16 @@ void sendOdometry(double delta_x, double delta_y, double delta_th, double dt, tf
     odom.header.frame_id = "odom";
 
     //set the position
-    odom.pose.pose.position.x = x_pose;
-    odom.pose.pose.position.y = y_pose;
+    odom.pose.pose.position.x = robot_x_pos;
+    odom.pose.pose.position.y = robot_y_vel;
     odom.pose.pose.position.z = 0.0;
     odom.pose.pose.orientation = odom_quat;
 
     //set the velocity
     odom.child_frame_id = "base_link";
-    odom.twist.twist.linear.x = vx;
-    odom.twist.twist.linear.y = vy;
-    odom.twist.twist.angular.z = vth;
+    odom.twist.twist.linear.x = robot_x_vel;
+    odom.twist.twist.linear.y = robot_y_vel;
+    odom.twist.twist.angular.z = robot_angular_vel;
 
     //publish the message
     odometry_pub.publish(odom);
@@ -196,51 +199,24 @@ void sendOdometry(double delta_x, double delta_y, double delta_th, double dt, tf
 void publishOdometry(ros::Publisher odometry_pub, const ros_odrive::odrive_msg odrive_msg,
                      tf::TransformBroadcaster odom_broadcaster, const ros::Time current_time,
                      const ros::Time last_time) {
-    // get values
-    float current_left_encoder = odrive_msg.pos0;
-    float current_right_encoder = odrive_msg.pos1;
 
-    // calc delta
-    float dt_left_encoder = current_left_encoder - left_encoder;
-    float dt_right_encoder = current_right_encoder - right_encoder;
+    double curr_wheel_R_ang_pos = getAngularPos(RIGHT_AXIS);
+    double curr_wheel_L_ang_pos = getAngularPos(LEFT_AXIS);
+    double dtime = current_time - last_time.toSeс();
 
-    // set values
-    left_encoder = current_left_encoder;
-    right_encoder = current_right_encoder;
+    wheel_L_ang_vel = (curr_wheel_L_ang_pos - wheel_L_ang_pos) / (dtime);
+    wheel_R_ang_vel = (curr_wheel_R_ang_pos - wheel_R_ang_pos) / (dtime);
+    wheel_L_ang_pos = curr_wheel_L_ang_pos;
+    wheel_R_ang_pos = curr_wheel_R_ang_pos;
+    robot_angular_vel = (((odom->wheel_R_ang_pos - odom->wheel_L_ang_pos) * wheel_radius / base_width) - robot_angular_pos) / dtime;
+    robot_angular_pos = (odom->wheel_R_ang_pos - odom->wheel_L_ang_pos) * wheel_radius / base_width;
+    robot_x_vel = (odom->wheel_L_ang_vel * wheel_radius + robot_angular_vel * (base_width / 2.0)) * cos(robot_angular_pos);
+    robot_y_vel = (odom->wheel_L_ang_vel * wheel_radius + robot_angular_vel * (base_width / 2.0)) * sin(robot_angular_pos);
+    robot_x_pos = robot_x_pos + robot_x_vel * dtime;
+    robot_y_pos = robot_y_pos + robot_y_vel * dtime;
 
-    float dt_left_meter = -1.0 * ( dt_left_encoder / encoder_click_per_meter);
-    float dt_right_meter = (dt_right_encoder / encoder_click_per_meter);
-
-    double right_left = dt_right_meter - dt_left_meter;
-
-    double vx = 0.0;
-    double vy = 0.0;
-    double vtheta = 0.0;
-
-    if(right_left != 0.0){
-
-        double a = base_width * (dt_right_meter + dt_left_meter) * 0.5 / right_left;
-
-        double cos_current = cos(th_pose);
-        double sin_current = sin(th_pose);
-
-        double fraction = right_left / base_width;
-        if(isnan(fraction)){
-            ROS_ERROR("fraction is nan");
-        }
-        vx = a * (cos(fraction + th_pose) - cos_current);
-        if(isnan(fraction)){
-            ROS_ERROR("vx is nan");
-        }
-        vy = -a * (sin(fraction + th_pose) - sin_current);
-        if(isnan(fraction)){
-            ROS_ERROR("vy is nan");
-        }
-        vtheta = fraction;
-    }
     // send odometry
-    double dt = (current_time - last_time).toSec();
-    sendOdometry(vx, vy, vtheta, dt, odom_broadcaster, odometry_pub);
+    sendOdometry(odom_broadcaster, odometry_pub);
 }
 
 void velCallback(const geometry_msgs::Twist &vel) {
@@ -259,11 +235,11 @@ void velCallback(const geometry_msgs::Twist &vel) {
     float right = -1.0 * encoder_click_per_meter * vr;
     float left = encoder_click_per_meter * vl;
 
-    cmd = "axis1.controller.vel_setpoint";
+    cmd = RIGHT_AXIS.append"axis1.controller.vel_setpoint");
     writeOdriveData(endpoint, odrive_json,
                     cmd, right);
 
-    cmd = "axis0.controller.vel_setpoint";
+    cmd = LEFT_AXIS.append("controller.vel_setpoint");
     writeOdriveData(endpoint, odrive_json,
                     cmd, left);
 }
@@ -347,6 +323,9 @@ int main(int argc, char **argv) {
     nh.param("encoder_click_per_rotate", encoder_click_per_rotate, 90);
 
     wheel_circum = 2.0 * wheel_radius * M_PI;
+
+    coeff = 2 * M_PI / encoder_click_per_rotate;
+
     encoder_click_per_meter = encoder_click_per_rotate / wheel_circum;
 
     ros::Publisher odrive_pub = nh.advertise<ros_odrive::odrive_msg>("odrive_msg_" + od_sn, 100);
