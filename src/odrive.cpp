@@ -179,7 +179,7 @@ void initJointStatePublisher(ros::NodeHandle nh)
 	joint_states.header.frame_id = "base_link";
 
     //assigning the arrays to the message
-    char *name[] = {"left_wheel_hinge", "right_wheel_hinge"};
+    std::string name[] = {"left_wheel_hinge", "right_wheel_hinge"};
     joint_states.name = name;
 
     joint_states.position = pos;
