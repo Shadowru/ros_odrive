@@ -17,9 +17,9 @@ float encoder_click_per_meter;
 
 ros::Time current_time, last_time;
 
-double x;
-double y;
-double th;
+double x_pose;
+double y_pose;
+double th_pose;
 
 float right_encoder;
 float left_encoder;
@@ -130,6 +130,15 @@ ros_odrive::odrive_msg publishMessage(ros::Publisher odrive_pub) {
     return msg;
 }
 
+void resetOdometry(){
+    ROS_INFO("Reset odometry");
+    right_encoder = readRightWheelEncoder();
+    left_encoder = readLeftWheelEncoder();
+    x_pose = 0;
+    y_pose = 0;
+    th_pose = 0;
+};
+
 void sendOdometry(double delta_x, double delta_y, double delta_th, double dt, tf::TransformBroadcaster odom_broadcaster, ros::Publisher odometry_pub){
 
 /*
@@ -137,9 +146,9 @@ void sendOdometry(double delta_x, double delta_y, double delta_th, double dt, tf
     double delta_y = (vx * sin(th) + vy * cos(th)) * dt;
     double delta_th = vth * dt;
 */
-    x += delta_x;
-    y += delta_y;
-    th += delta_th;
+    x_pose += delta_x;
+    y_pose += delta_y;
+    th_pose += delta_th;
 
     double vx = delta_x / dt;
     double vy = delta_y / dt;
@@ -147,7 +156,7 @@ void sendOdometry(double delta_x, double delta_y, double delta_th, double dt, tf
     double vth = delta_th / dt;
 
     //since all odometry is 6DOF we'll need a quaternion created from yaw
-    geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromYaw(th);
+    geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromYaw(th_pose);
 
     //first, we'll publish the transform over tf
     geometry_msgs::TransformStamped odom_trans;
@@ -155,8 +164,8 @@ void sendOdometry(double delta_x, double delta_y, double delta_th, double dt, tf
     odom_trans.header.frame_id = "odom";
     odom_trans.child_frame_id = "base_link";
 
-    odom_trans.transform.translation.x = x;
-    odom_trans.transform.translation.y = y;
+    odom_trans.transform.translation.x = x_pose;
+    odom_trans.transform.translation.y = y_pose;
     odom_trans.transform.translation.z = 0.0;
     odom_trans.transform.rotation = odom_quat;
 
@@ -366,18 +375,12 @@ int main(int argc, char **argv) {
     current_time = ros::Time::now();
     last_time = ros::Time::now();
 
-    ROS_INFO("Init odometry");
-    right_encoder = readRightWheelEncoder();
-    left_encoder = readLeftWheelEncoder();
 
     ROS_INFO("Start pos : Axis0 : %f , Axis1 : %f", left_encoder, right_encoder);
 
     setPID(0.04, 0.15);
 
-    //TODO : read from params
-    x = 0;
-    y = 0;
-    th = 0;
+    resetOdometry();
 
     // Example loop - reading values and updating motor velocity
     ROS_INFO("Starting idle loop");
