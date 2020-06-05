@@ -228,11 +228,11 @@ void publishOdometry(ros::Publisher odometry_pub, const ros_odrive::odrive_msg o
         if(isnan(fraction)){
             ROS_ERROR("fraction is nan");
         }
-        vy = a * (sin(fraction + th_pose) - sin_current);
+        vx = a * (cos(fraction + th_pose) - cos_current);
         if(isnan(fraction)){
             ROS_ERROR("vx is nan");
         }
-        vx = -a * (cos(fraction + th_pose) - cos_current);
+        vy = -a * (sin(fraction + th_pose) - sin_current);
         if(isnan(fraction)){
             ROS_ERROR("vy is nan");
         }
