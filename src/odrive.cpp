@@ -160,7 +160,7 @@ void sendOdometry(double delta_x, double delta_y, double delta_th, double dt, tf
 
     //first, we'll publish the transform over tf
     geometry_msgs::TransformStamped odom_trans;
-    odom_trans.header.stamp = current_time;
+    odom_trans.header.stamp = ros::Time::now();//current_time;
     odom_trans.header.frame_id = "odom";
     odom_trans.child_frame_id = "base_link";
 
