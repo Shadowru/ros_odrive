@@ -220,7 +220,7 @@ void publishOdometry(ros::Publisher odometry_pub, const ros_odrive::odrive_msg o
     wheel_L_ang_vel = delta_L_ang_pos / (dtime);
     wheel_R_ang_vel = delta_R_ang_pos / (dtime);
 
-    raw_wheel_L_ang_pos = wheel_L_ang_pos + delta_L_ang_pos;
+    wheel_L_ang_pos = wheel_L_ang_pos + delta_L_ang_pos;
     wheel_R_ang_pos = wheel_R_ang_pos + delta_R_ang_pos;
 
     robot_angular_vel = (((wheel_R_ang_pos - wheel_L_ang_pos) * wheel_radius / base_width) - robot_angular_pos) / dtime;
