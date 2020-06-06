@@ -214,7 +214,7 @@ void publishJointState(ros::Publisher joint_state_pub){
 	joint_state_pub.publish(joint_states);
 }
 
-void resetOdometry(){
+void resetOdometry(tf::TransformBroadcaster odom_broadcaster, ros::Publisher odometry_pub){
     ROS_INFO("Reset odometry");
     raw_wheel_L_ang_pos = getAngularPos(LEFT_AXIS);
     raw_wheel_R_ang_pos = getAngularPos(RIGHT_AXIS);
@@ -230,6 +230,8 @@ void resetOdometry(){
     robot_y_vel = 0.0;
     robot_x_pos = 0.0;
     robot_y_pos = 0.0;
+
+    void sendOdometry(odom_broadcaster, odometry_pub);
 };
 
 void publishOdometry(ros::Publisher odometry_pub, const ros_odrive::odrive_msg odrive_msg,
@@ -397,6 +399,13 @@ int main(int argc, char **argv) {
     ros::Publisher odrive_pub = nh.advertise<ros_odrive::odrive_msg>("odrive_msg_" + od_sn, 10);
 
     ros::Publisher odrive_odometry = nh.advertise<nav_msgs::Odometry>("/odom", 100);
+    tf::TransformBroadcaster odom_broadcaster;
+
+    current_time = ros::Time::now();
+    last_time = ros::Time::now();
+
+    resetOdometry(odrive_odometry, odom_broadcaster);
+
 
     ros::Publisher joint_state_pub = nh.advertise<sensor_msgs::JointState>("joint_states", 10);
 
@@ -416,8 +425,6 @@ int main(int argc, char **argv) {
     ros::Subscriber odrive_sub = nh.subscribe("odrive_ctrl", 10, msgCallback);
 
     ros::Subscriber odrive_cmd_vel = nh.subscribe("cmd_vel", 10, velCallback);
-
-    tf::TransformBroadcaster odom_broadcaster;
 
     diagnostic_updater::Updater odrive_diagnostics_updater;
     odrive_diagnostics_updater.setHardwareIDf("ODRIVE S/N: %s", od_sn.c_str());
@@ -449,14 +456,11 @@ int main(int argc, char **argv) {
 
     setPID(0.04, 0.15);
 
-    resetOdometry();
+
 
     // Example loop - reading values and updating motor velocity
     ROS_INFO("Starting idle loop");
     int diagnostics_barrier = 0;
-
-    current_time = ros::Time::now();
-    last_time = ros::Time::now();
 
     while (ros::ok()) {
         // Publish status message
