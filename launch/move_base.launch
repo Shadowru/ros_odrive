@@ -40,8 +40,8 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCL
 
         <!-- local costmap, needs size -->
         <rosparam file="$(find ros_odrive)/params/costmap_local.yaml" command="load" ns="local_costmap" />
-        <param name="local_costmap/width" value="10.0"/>
-        <param name="local_costmap/height" value="10.0"/>
+        <param name="local_costmap/width" value="3.5"/>
+        <param name="local_costmap/height" value="3.5"/>
 
         <rosparam file="$(find ros_odrive)/params/costmap_global_laser.yaml" command="load" ns="global_costmap"/>
     </node>
