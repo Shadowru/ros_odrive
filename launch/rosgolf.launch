@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <launch>
   <node name="ros_odrive" pkg="ros_odrive" type="ros_odrive" required="true">
-    <param name="rate" value="15"/>
+    <param name="rate" value="8"/>
     <param name="od_sn" value="0x335831593536"/>
     <!--    <remap from="rosodrive/odom" to="odom"/>-->
   </node>
