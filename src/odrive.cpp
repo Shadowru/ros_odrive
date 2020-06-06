@@ -391,7 +391,7 @@ int main(int argc, char **argv) {
 
     ros::Publisher odrive_pub = nh.advertise<ros_odrive::odrive_msg>("odrive_msg_" + od_sn, 10);
 
-    ros::Publisher odrive_odometry = nh.advertise<nav_msgs::Odometry>("/odom", 100);
+    ros::Publisher odrive_odometry = nh.advertise<nav_msgs::Odometry>("odom", 100);
 
     ros::Publisher joint_state_pub = nh.advertise<sensor_msgs::JointState>("joint_states", 10);
 
