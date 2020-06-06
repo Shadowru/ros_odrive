@@ -204,6 +204,9 @@ void sendOdometry(tf::TransformBroadcaster odom_broadcaster, ros::Publisher odom
 
 
 void publishJointState(ros::Publisher joint_state_pub){
+    joint_states.position = pos;
+    joint_states.velocity = vel;
+    joint_states.effort = eff;
 	joint_states.header.stamp = current_time;
 	joint_state_pub.publish(joint_states);
 }
