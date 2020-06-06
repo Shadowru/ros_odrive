@@ -1,6 +1,6 @@
-global_frame: map
+global_frame: odom
+rolling_window: true
 track_unknown_space: true
-static_map: true
 
 plugins:
   - {name: obstacles_laser,           type: "costmap_2d::ObstacleLayer"}
