@@ -52,9 +52,9 @@ add_executable(ros_odrive src/odrive.cpp src/odrive_endpoint.cpp src/odrive_util
 add_dependencies(ros_odrive ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(ros_odrive ${usb-1.0_LIBRARIES} ${catkin_LIBRARIES} ${jsoncpp_LIBRARIES})
 
-add_executable(pose_publisher src/robot_pose_publisher.cpp)
-add_dependencies(pose_publisher ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-target_link_libraries(pose_publisher ${catkin_LIBRARIES})
+add_executable(robot_pose_publisher src/robot_pose_publisher.cpp)
+add_dependencies(robot_pose_publisher ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(robot_pose_publisher ${catkin_LIBRARIES})
 
 #############
 ## Install ##
@@ -70,11 +70,11 @@ install(TARGETS ros_odrive
   RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION}
 )
 
-install(TARGETS pose_publisher
+install(TARGETS robot_pose_publisher
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
-install(TARGETS pose_publisher
+install(TARGETS robot_pose_publisher
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION}
