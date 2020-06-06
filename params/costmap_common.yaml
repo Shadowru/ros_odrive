@@ -1,12 +1,12 @@
-footprint: [[-0.5, -0.33], [-0.5, 0.33], [0.5, 0.33], [0.5, -0.33]]
-footprint_padding: 0.01
+footprint: [[-0.156,-0.346], [0.156, -0.346], [0.558, -0.24], [0.558, 0.24], [0.156, 0.346], [-0.156,0.346]]]
+footprint_padding: 0.1
 
 robot_base_frame: base_link
 update_frequency: 4.0
 publish_frequency: 3.0
 transform_tolerance: 0.5
 
-resolution: 0.05
+resolution: 0.1
 
 obstacle_range: 5.5
 raytrace_range: 6.0
