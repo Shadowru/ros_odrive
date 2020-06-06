@@ -42,6 +42,7 @@ vector<double> pos(2, 0.0);
 vector<double> vel(2, 0.0);
 vector<double> eff(2, 0.0);
 
+#define ODOM_COV 0.005
 
 void msgCallback(const ros_odrive::odrive_ctrl::ConstPtr &msg) {
     std::string cmd;
@@ -183,6 +184,13 @@ void sendOdometry(tf::TransformBroadcaster odom_broadcaster, ros::Publisher odom
     odom.pose.pose.position.y = robot_y_pos;
     odom.pose.pose.position.z = 0.0;
     odom.pose.pose.orientation = odom_quat;
+
+    odom.pose.covariance[0] = ODOM_COV;
+    odom.pose.covariance[7] = ODOM_COV;
+    odom.pose.covariance[14] = ODOM_COV;
+    odom.pose.covariance[21] = ODOM_COV;
+    odom.pose.covariance[28] = ODOM_COV;
+    odom.pose.covariance[35] = ODOM_COV;
 
     //set the velocity
     odom.child_frame_id = "base_link";
