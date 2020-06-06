@@ -1,13 +1,6 @@
 <?xml version="1.0"?>
 <launch>
-  <node name="ros_odrive" pkg="ros_odrive" type="ros_odrive" required="true">
-    <param name="rate" value="8"/>
-    <param name="od_sn" value="0x335831593536"/>
-    <!--    <remap from="rosodrive/odom" to="odom"/>-->
-  </node>
   <include file="$(find ros_odrive)/launch/urdf.launch"/>
-  <node name="robot_pose_publisher" pkg="ros_odrive" type="robot_pose_publisher" required="true">
-  </node>
 
 <!--  <include file="$(find ros_odrive)/launch/rosgolf_localization.launch"/>-->
 <!--  <include file="$(find ros_odrive)/launch/robot_pose_ekf.launch"/>-->
@@ -20,4 +13,11 @@
 <!--  <include file="$(find ros_odrive)/launch/diagnostics.launch"/>-->
   <include file="$(find ros_odrive)/launch/move_base.launch"/>
   <include file="$(find ros_odrive)/launch/webui.launch"/>
+
+  <node name="ros_odrive" pkg="ros_odrive" type="ros_odrive" required="true">
+    <param name="rate" value="10"/>
+    <param name="od_sn" value="0x335831593536"/>
+    <!--    <remap from="rosodrive/odom" to="odom"/>-->
+  </node>
+
 </launch>
