@@ -164,7 +164,7 @@ void sendOdometry(tf::TransformBroadcaster odom_broadcaster, ros::Publisher odom
     geometry_msgs::TransformStamped odom_trans;
     odom_trans.header.stamp = current_time;
     odom_trans.header.frame_id = "ros_odrive/odom";
-    odom_trans.child_frame_id = "base_link";//footprint";
+    odom_trans.child_frame_id = "base_footprint";//footprint";
 
     odom_trans.transform.translation.x = robot_x_pos;
     odom_trans.transform.translation.y = robot_y_pos;
@@ -193,7 +193,7 @@ void sendOdometry(tf::TransformBroadcaster odom_broadcaster, ros::Publisher odom
     odom.pose.covariance[35] = ODOM_COV;
 
     //set the velocity
-    odom.child_frame_id = "base_link";
+    odom.child_frame_id = "base_footprint";
     odom.twist.twist.linear.x = robot_x_vel;
     odom.twist.twist.linear.y = robot_y_vel;
     odom.twist.twist.angular.z = robot_angular_vel;
