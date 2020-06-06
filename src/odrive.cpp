@@ -193,7 +193,7 @@ void sendOdometry(tf::TransformBroadcaster odom_broadcaster, ros::Publisher odom
     odom.pose.covariance[35] = ODOM_COV;
 
     //set the velocity
-    odom.child_frame_id = "base_footprint";
+    odom.child_frame_id = "base_link";
     odom.twist.twist.linear.x = robot_x_vel;
     odom.twist.twist.linear.y = robot_y_vel;
     odom.twist.twist.angular.z = robot_angular_vel;
