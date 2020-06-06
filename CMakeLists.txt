@@ -51,9 +51,10 @@ include_directories(
 add_executable(ros_odrive src/odrive.cpp src/odrive_endpoint.cpp src/odrive_utils.cpp)
 add_dependencies(ros_odrive ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(ros_odrive ${usb-1.0_LIBRARIES} ${catkin_LIBRARIES} ${jsoncpp_LIBRARIES})
+
 add_executable(pose_publisher src/robot_pose_publisher.cpp)
 add_dependencies(pose_publisher ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-arget_link_libraries(pose_publisher ${catkin_LIBRARIES})
+target_link_libraries(pose_publisher ${catkin_LIBRARIES})
 
 #############
 ## Install ##
