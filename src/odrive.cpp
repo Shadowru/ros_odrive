@@ -231,7 +231,7 @@ void resetOdometry(tf::TransformBroadcaster odom_broadcaster, ros::Publisher odo
     robot_x_pos = 0.0;
     robot_y_pos = 0.0;
 
-    void sendOdometry(odometry_pub, odom_broadcaster);
+    void sendOdometry(odom_broadcaster, odometry_pub);
 };
 
 void publishOdometry(ros::Publisher odometry_pub, const ros_odrive::odrive_msg odrive_msg,
@@ -404,7 +404,7 @@ int main(int argc, char **argv) {
     current_time = ros::Time::now();
     last_time = ros::Time::now();
 
-    resetOdometry(odrive_odometry, odom_broadcaster);
+    resetOdometry(odom_broadcaster, odrive_odometry);
 
 
     ros::Publisher joint_state_pub = nh.advertise<sensor_msgs::JointState>("joint_states", 10);
