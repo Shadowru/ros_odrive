@@ -196,9 +196,6 @@ void sendOdometry(tf::TransformBroadcaster odom_broadcaster, ros::Publisher odom
 
 
 void publishJointState(ros::Publisher joint_state_pub){
-    pos[0] = wheel_L_ang_pos;
-	pos[1] = wheel_R_ang_pos;
-
 	joint_states.position = pos;
 	joint_states.header.stamp = current_time;
 	joint_state_pub.publish(joint_states);
@@ -259,6 +256,20 @@ void publishOdometry(ros::Publisher odometry_pub, const ros_odrive::odrive_msg o
 
     // send odometry
     sendOdometry(odom_broadcaster, odometry_pub);
+
+    pos[0] = wheel_L_ang_pos;
+    pos[1] = wheel_R_ang_pos;
+
+    vel[0] = wheel_L_ang_vel;
+    vel[1] = wheel_R_ang_vel;
+
+    //Torque [N.m] = 8.27 * Current [A] / KV.
+    float fval;
+    readOdriveData(endpoint, odrive_json, string("axis0.motor.current_control.Iq_measured"), fval);
+    eff[0] = 8.27 * fval / 16;
+    readOdriveData(endpoint, odrive_json, string("axis1.motor.current_control.Iq_measured"), fval);
+    eff[1] = 8.27 * fval / 16;
+
 }
 
 void velCallback(const geometry_msgs::Twist &vel) {
