@@ -1,7 +1,8 @@
 
 
-frequency: 20
+frequency: 30
 
+silent_tf_failure: false
 sensor_timeout: 0.2
 
 two_d_mode: false
@@ -68,10 +69,10 @@ odom0: /ros_odrive/odometry
 # do not provide some of the state variables estimated by the filter. For example, a TwistWithCovarianceStamped message
 # has no pose information, so the first six values would be meaningless in that case. Each vector defaults to all false
 # if unspecified, effectively making this parameter required for each sensor.
-odom0_config: [true,  true,  true,
+odom0_config: [true,  true,  false,
                false, false, true,
-               false, false, false,
-               false, false, false,
+               true, true, false,
+               false, false, true,
                false, false, false]
 
 # If you have high-frequency data or are running with a low frequency parameter value, then you may want to increase
