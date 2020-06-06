@@ -160,7 +160,7 @@ void sendOdometry(tf::TransformBroadcaster odom_broadcaster, ros::Publisher odom
     //since all odometry is 6DOF we'll need a quaternion created from yaw
     geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromYaw(robot_angular_pos);
 
-    std::string frame_id = string("ros_odrive/odometry");
+    std::string frame_id = string("odom");//ros_odrive/odometry");
     std::string child_frame_id = string("base_link");
 
     //first, we'll publish the transform over tf
@@ -396,7 +396,7 @@ int main(int argc, char **argv) {
 
     ros::Publisher odrive_pub = nh.advertise<ros_odrive::odrive_msg>("odrive_msg_" + od_sn, 10);
 
-    ros::Publisher odrive_odometry = nh.advertise<nav_msgs::Odometry>("odometry", 100);
+    ros::Publisher odrive_odometry = nh.advertise<nav_msgs::Odometry>("/odom", 100);
 
     ros::Publisher joint_state_pub = nh.advertise<sensor_msgs::JointState>("joint_states", 10);
 
