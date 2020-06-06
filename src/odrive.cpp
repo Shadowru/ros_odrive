@@ -164,7 +164,7 @@ void sendOdometry(tf::TransformBroadcaster odom_broadcaster, ros::Publisher odom
     geometry_msgs::TransformStamped odom_trans;
     odom_trans.header.stamp = current_time;
     odom_trans.header.frame_id = "ros_odrive/odom";
-    odom_trans.child_frame_id = "base_footprint";//footprint";
+    odom_trans.child_frame_id = "base_link";//footprint";
 
     odom_trans.transform.translation.x = robot_x_pos;
     odom_trans.transform.translation.y = robot_y_pos;
@@ -177,7 +177,7 @@ void sendOdometry(tf::TransformBroadcaster odom_broadcaster, ros::Publisher odom
     //next, we'll publish the odometry message over ROS
     nav_msgs::Odometry odom;
     odom.header.stamp = current_time;
-    odom.header.frame_id = "odom";
+    odom.header.frame_id = "ros_odrive/odom";
 
     //set the position
     odom.pose.pose.position.x = robot_x_pos;
