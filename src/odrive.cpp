@@ -144,9 +144,9 @@ ros_odrive::odrive_msg publishMessage(ros::Publisher odrive_pub) {
     msg.axis_error1 = u16val;
 
     readOdriveData(endpoint, odrive_json, string("axis0.motor.error"), u16val);
-    msg.mot_error0 = u16val;
+    msg.motor_error0 = u16val;
     readOdriveData(endpoint, odrive_json, string("axis1.motor.error"), u16val);
-    msg.mot_error1 = u16val;
+    msg.motor_error1 = u16val;
 
     readOdriveData(endpoint, odrive_json, string("axis0.current_state"), u8val);
     msg.axis_state0 = u8val;
