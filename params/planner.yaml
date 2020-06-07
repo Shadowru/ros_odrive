@@ -1,5 +1,5 @@
 controller_frequency: 5.0
-recovery_behaviour_enabled: false
+recovery_behaviour_enabled: true
 
 NavfnROS:
   allow_unknown: true # Specifies whether or not to allow navfn to create plans that traverse unknown space.
@@ -42,7 +42,7 @@ TrajectoryPlannerROS:
   heading_lookahead: 0.325  #How far to look ahead in meters when scoring different in-place-rotation trajectories
   heading_scoring: false  #Whether to score based on the robot's heading to the path or its distance from the path. default false
   heading_scoring_timestep: 0.8   #How far to look ahead in time in seconds along the simulated trajectory when using heading scoring (double, default: 0.8)
-  dwa: true #Whether to use the Dynamic Window Approach (DWA)_ or whether to use Trajectory Rollout
+  dwa: false #Whether to use the Dynamic Window Approach (DWA)_ or whether to use Trajectory Rollout
   simple_attractor: false
   publish_cost_grid_pc: true
 
@@ -55,7 +55,7 @@ DWAPlannerROS:
   # Robot configuration parameters
   acc_lim_x: 0.05
   acc_lim_y: 0
-  acc_lim_th: 0.15
+  acc_lim_th: 0.05
 
   max_vel_x: 0.05
   min_vel_x: -0.05
