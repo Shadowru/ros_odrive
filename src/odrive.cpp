@@ -139,15 +139,21 @@ ros_odrive::odrive_msg publishMessage(ros::Publisher odrive_pub) {
     ros_odrive::odrive_msg msg;
 
     readOdriveData(endpoint, odrive_json, string("axis0.error"), u16val);
-    msg.error0 = u16val;
+    msg.axis_error0 = u16val;
     readOdriveData(endpoint, odrive_json, string("axis1.error"), u16val);
-    msg.error1 = u16val;
+    msg.axis_error1 = u16val;
+
+    readOdriveData(endpoint, odrive_json, string("axis0.motor.error"), u16val);
+    msg.mot_error0 = u16val;
+    readOdriveData(endpoint, odrive_json, string("axis1.motor.error"), u16val);
+    msg.mot_error1 = u16val;
+
     readOdriveData(endpoint, odrive_json, string("axis0.current_state"), u8val);
     msg.state0 = u8val;
     readOdriveData(endpoint, odrive_json, string("axis1.current_state"), u8val);
     msg.state1 = u8val;
-    msg.pos0 = readLeftWheelEncoder();
-    msg.pos1 = readRightWheelEncoder();
+    msg.pos0 = 0.0;//readLeftWheelEncoder();
+    msg.pos1 = 0.0;//readRightWheelEncoder();
 
     // Publish message
     odrive_pub.publish(msg);
