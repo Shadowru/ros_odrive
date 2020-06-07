@@ -7,8 +7,8 @@ NavfnROS:
 
 TrajectoryPlannerROS:
   # Robot Configuration Parameters
-  acc_lim_x: 0.01
-  acc_lim_theta: 0.005
+  acc_lim_x: 0.0
+  acc_lim_theta: 0.0
 
   max_vel_x: 0.05
   min_vel_x: 0.005
