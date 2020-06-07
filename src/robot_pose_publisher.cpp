@@ -40,9 +40,9 @@ int main(int argc, char ** argv)
   nh_priv.param<bool>("is_stamped", is_stamped, false);
 
   if(is_stamped)
-    p_pub = nh.advertise<geometry_msgs::PoseStamped>("robot_pose", 1);
+    p_pub = nh.advertise<geometry_msgs::PoseStamped>("rosbot_on_map_pose", 1);
   else
-    p_pub = nh.advertise<geometry_msgs::Pose>("robot_pose", 1);
+    p_pub = nh.advertise<geometry_msgs::Pose>("rosbot_on_map_pose", 1);
 
   // create the listener
   tf::TransformListener listener;
