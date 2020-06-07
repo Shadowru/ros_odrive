@@ -11,17 +11,18 @@ odrive_endpoint *endpoint = NULL;
 
 // Args
 std::string odom_frame, base_frame;
-int encoder_click_per_rotate;
+int encoder_cpr;
 float base_width;
 float wheel_radius;
 
 // Calculated values
 float wheel_circum;
-float encoder_click_per_meter;
+float encoder_cpm;
 double coeff;
 
 ros::Time current_time, last_time;
 
+//TODO: Odometry class
 double raw_wheel_L_ang_pos;
 double raw_wheel_R_ang_pos;
 
@@ -304,8 +305,8 @@ void velCallback(const geometry_msgs::Twist &vel) {
     float vr = ((2.0 * v) + (w * base_width)) / (2.0 * wheel_radius);
     float vl = ((2.0 * v) + (-1.0 * w * base_width)) / (2.0 * wheel_radius);
 
-    float right = -1.0 * encoder_click_per_meter * vr;
-    float left = encoder_click_per_meter * vl;
+    float right = -1.0 * encoder_cpm * vr;
+    float left = encoder_cpm * vl;
 
     if(right < -60.0){
         right = -60.0;
@@ -428,13 +429,13 @@ int main(int argc, char **argv) {
     //test robot width
     nh.param<float>("base_width", base_width, 0.58);
     nh.param<float>("wheel_radius", wheel_radius, 0.240 / 2);
-    nh.param("encoder_click_per_rotate", encoder_click_per_rotate, 90);
+    nh.param("encoder_cpr", encoder_cpr, 90);
 
     wheel_circum = 2.0 * wheel_radius * M_PI;
 
-    coeff = 2 * M_PI / encoder_click_per_rotate;
+    coeff = 2 * M_PI / encoder_cpr;
 
-    encoder_click_per_meter = encoder_click_per_rotate / wheel_circum;
+    encoder_cpm = encoder_cpr / wheel_circum;
 
     ros::Publisher odrive_pub = nh.advertise<ros_odrive::odrive_msg>("odrive_msg_" + od_sn, 10);
 
