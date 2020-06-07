@@ -333,6 +333,17 @@ void odrive_diagnostics(diagnostic_updater::DiagnosticStatusWrapper &stat) {
     stat.add("Axis 0 temperature", fval);
 }
 
+void stopMotor(){
+    std::string cmd
+    cmd = "axis1.controller.vel_setpoint";
+    writeOdriveData(endpoint, odrive_json,
+                    cmd, 0.0);
+
+    cmd = "axis0.controller.vel_setpoint";
+    writeOdriveData(endpoint, odrive_json,
+                    cmd, 0.0);
+}
+
 void updateWatchDog(){
     // update watchdog
     execOdriveFunc(endpoint, odrive_json, "axis0.watchdog_feed");
@@ -479,13 +490,7 @@ int main(int argc, char **argv) {
         }
     }
 
-    std::string cmd = "axis1.controller.vel_setpoint";
-    writeOdriveData(endpoint, odrive_json,
-                    cmd, 0.0);
-
-    cmd = "axis0.controller.vel_setpoint";
-    writeOdriveData(endpoint, odrive_json,
-                    cmd, 0.0);
+    stopMotor();
 
     endpoint->remove();
 
