@@ -10,6 +10,7 @@ bool targetJsonValid = false;
 odrive_endpoint *endpoint = NULL;
 
 // Args
+std::string odom_frame, base_frame;
 int encoder_click_per_rotate;
 float base_width;
 float wheel_radius;
@@ -160,14 +161,11 @@ void sendOdometry(tf::TransformBroadcaster odom_broadcaster, ros::Publisher odom
     //since all odometry is 6DOF we'll need a quaternion created from yaw
     geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromYaw(robot_angular_pos);
 
-    std::string frame_id = string("odom");//ros_odrive/odometry");
-    std::string child_frame_id = string("base_link");
-
     //first, we'll publish the transform over tf
     geometry_msgs::TransformStamped odom_trans;
     odom_trans.header.stamp = current_time;
-    odom_trans.header.frame_id = frame_id;
-    odom_trans.child_frame_id = child_frame_id;
+    odom_trans.header.frame_id = odom_frame;
+    odom_trans.child_frame_id = base_frame;
 
     odom_trans.transform.translation.x = robot_x_pos;
     odom_trans.transform.translation.y = robot_y_pos;
@@ -180,7 +178,7 @@ void sendOdometry(tf::TransformBroadcaster odom_broadcaster, ros::Publisher odom
     //next, we'll publish the odometry message over ROS
     nav_msgs::Odometry odom;
     odom.header.stamp = current_time;
-    odom.header.frame_id = frame_id;
+    odom.header.frame_id = odom_frame;
 
     //set the position
     odom.pose.pose.position.x = robot_x_pos;
@@ -196,7 +194,7 @@ void sendOdometry(tf::TransformBroadcaster odom_broadcaster, ros::Publisher odom
     odom.pose.covariance[35] = ODOM_COV;
 
     //set the velocity
-    odom.child_frame_id = child_frame_id;
+    odom.child_frame_id = base_frame;
     odom.twist.twist.linear.x = robot_x_vel;
     odom.twist.twist.linear.y = robot_y_vel;
     odom.twist.twist.angular.z = robot_angular_vel;
@@ -368,6 +366,7 @@ int main(int argc, char **argv) {
 
     // Initialize ROS node
     ros::init(argc, argv, "ros_odrive"); // Initializes Node Name
+    ros::NodeHandle nh_global;
     ros::NodeHandle nh("~");
 
     nh.param("rate", rate, 10);
@@ -385,6 +384,9 @@ int main(int argc, char **argv) {
         return 1;
     }
 
+    nh_priv.param<std::string>("odom_frame", odom_frame, "odom");
+    nh_priv.param<std::string>("base_frame", base_frame, "base_link");
+
     //test robot width
     nh.param<float>("base_width", base_width, 0.58);
     nh.param<float>("wheel_radius", wheel_radius, 0.235 / 2);
@@ -398,14 +400,13 @@ int main(int argc, char **argv) {
 
     ros::Publisher odrive_pub = nh.advertise<ros_odrive::odrive_msg>("odrive_msg_" + od_sn, 10);
 
-    ros::Publisher odrive_odometry = nh.advertise<nav_msgs::Odometry>("/odom", 100);
+    ros::Publisher odrive_odometry = nh_global.advertise<nav_msgs::Odometry>(odom_frame, 100);
     tf::TransformBroadcaster odom_broadcaster;
 
     current_time = ros::Time::now();
     last_time = ros::Time::now();
 
     resetOdometry(odom_broadcaster, odrive_odometry);
-
 
     ros::Publisher joint_state_pub = nh.advertise<sensor_msgs::JointState>("joint_states", 10);
 

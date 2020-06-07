@@ -34,8 +34,8 @@ int main(int argc, char ** argv)
   bool is_stamped;
   ros::Publisher p_pub;
 
-  nh_priv.param<std::string>("map_frame",map_frame,"/map");
-  nh_priv.param<std::string>("base_frame",base_frame,"/base_link");
+  nh_priv.param<std::string>("map_frame", map_frame,"/map");
+  nh_priv.param<std::string>("base_frame", base_frame,"/base_link");
   nh_priv.param<double>("publish_frequency",publish_frequency,10);
   nh_priv.param<bool>("is_stamped", is_stamped, false);
 
