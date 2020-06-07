@@ -80,9 +80,9 @@ DWAPlannerROS:
   # # Forward Simulation Parameters
   sim_time: 4.0
   sim_granularity: 0.02
-  vx_samples: 15
+  vx_samples: 20
   vy_samples: 0
-  vtheta_samples: 20
+  vtheta_samples: 40
   # penalize_negative_x: true
 
   # # Trajectory scoring parameters
