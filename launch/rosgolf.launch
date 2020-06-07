@@ -17,6 +17,7 @@
 
   <node name="ros_odrive" pkg="ros_odrive" type="ros_odrive" required="true">
     <param name="rate" value="10"/>
+    <param name="wheel_radius" value="12.0"/>
     <param name="od_sn" value="0x335831593536"/>
     <!--    <remap from="rosodrive/odom" to="odom"/>-->
   </node>
