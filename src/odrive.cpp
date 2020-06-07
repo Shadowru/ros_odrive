@@ -119,21 +119,20 @@ float readLeftWheelEncoder()
     return readWheelEncoder(LEFT_AXIS);
 }
 
-
 double getAngularPos(std::string axis){
     return coeff * readWheelEncoder(axis);
 }
 
 /**
  *
- * Publishe odrive message to ROS
+ * Publish odrive message to ROS
  * @param endpoint odrive enumarated endpoint
  * @param odrive_json target json
  * @param odrive_pub ROS publisher
  * return ODRIVE_OK in success
  *
  */
-ros_odrive::odrive_msg publishMessage(ros::Publisher odrive_pub) {
+void publishOdriveMessage(ros::Publisher odrive_pub) {
     uint16_t u16val;
     uint8_t u8val;
     float fval;
@@ -391,6 +390,14 @@ void setPID(float p, float i){
                     "axis1.controller.config.vel_limit", vel_limit);
 }
 
+void initWheel(){
+    wheel_circum = 2.0 * wheel_radius * M_PI;
+
+    coeff = 2 * M_PI / encoder_cpr;
+
+    encoder_cpm = encoder_cpr / wheel_circum;
+}
+
 /**
  *
  * Node main function
@@ -405,7 +412,6 @@ int main(int argc, char **argv) {
 
     // Initialize ROS node
     ros::init(argc, argv, "ros_odrive"); // Initializes Node Name
-    ros::NodeHandle nh_global;
     ros::NodeHandle nh("~");
 
     nh.param("rate", rate, 10);
@@ -431,11 +437,7 @@ int main(int argc, char **argv) {
     nh.param<float>("wheel_radius", wheel_radius, 0.240 / 2);
     nh.param("encoder_cpr", encoder_cpr, 90);
 
-    wheel_circum = 2.0 * wheel_radius * M_PI;
-
-    coeff = 2 * M_PI / encoder_cpr;
-
-    encoder_cpm = encoder_cpr / wheel_circum;
+    initWheel();
 
     ros::Publisher odrive_pub = nh.advertise<ros_odrive::odrive_msg>("odrive_msg_" + od_sn, 10);
 
@@ -501,11 +503,9 @@ int main(int argc, char **argv) {
     int diagnostics_barrier = 0;
 
     while (ros::ok()) {
-        // Publish status message
-        ros_odrive::odrive_msg odrive_msg = publishMessage(odrive_pub);
         // Publish odometry message
         current_time = ros::Time::now();
-        publishOdometry(odrive_odometry, odrive_msg, odom_broadcaster, current_time, last_time);
+        publishOdometry(odrive_odometry, odom_broadcaster, current_time, last_time);
         publishJointState(joint_state_pub);
         last_time = current_time;
 
@@ -515,6 +515,8 @@ int main(int argc, char **argv) {
         if (diagnostics_barrier++ > 10) {
             odrive_diagnostics_updater.update();
             diagnostics_barrier = 0;
+            // Publish status message
+            publishOdriveMessage(odrive_pub);
         }
     }
 
