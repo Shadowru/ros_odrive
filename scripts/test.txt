@@ -25,3 +25,5 @@ rostopic pub -1 /ros_odrive/odrive_ctrl ros_odrive/odrive_ctrl 1 0 0
 rostopic pub -1 /ros_odrive/odrive_ctrl ros_odrive/odrive_ctrl 1 1 0
 
 rosrun rqt_graph rqt_graph
+
+roslaunch ros_odrive explore_light.launch
