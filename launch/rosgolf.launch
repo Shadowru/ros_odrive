@@ -21,4 +21,6 @@
     <!--    <remap from="rosodrive/odom" to="odom"/>-->
   </node>
 
+  <node pkg="ros_odrive" type="robot_pose_publisher" name="rosgolf_pose_publisher"/>
+
 </launch>
