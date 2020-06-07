@@ -384,8 +384,8 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    nh_priv.param<std::string>("odom_frame", odom_frame, "odom");
-    nh_priv.param<std::string>("base_frame", base_frame, "base_link");
+    nh.param<std::string>("odom_frame", odom_frame, "odom");
+    nh.param<std::string>("base_frame", base_frame, "base_link");
 
     //test robot width
     nh.param<float>("base_width", base_width, 0.58);
