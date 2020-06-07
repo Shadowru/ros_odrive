@@ -479,7 +479,7 @@ int main(int argc, char **argv) {
         }
     }
 
-    cmd = "axis1.controller.vel_setpoint";
+    std::string cmd = "axis1.controller.vel_setpoint";
     writeOdriveData(endpoint, odrive_json,
                     cmd, 0.0);
 
