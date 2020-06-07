@@ -334,7 +334,7 @@ void odrive_diagnostics(diagnostic_updater::DiagnosticStatusWrapper &stat) {
 }
 
 void stopMotor(){
-    std::string cmd
+    std::string cmd;
     cmd = "axis1.controller.vel_setpoint";
     writeOdriveData(endpoint, odrive_json,
                     cmd, 0.0);
