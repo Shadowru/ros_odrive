@@ -420,7 +420,7 @@ int main(int argc, char **argv) {
 
     ros::Subscriber odrive_sub = nh.subscribe("odrive_ctrl", 10, msgCallback);
 
-    ros::Subscriber odrive_cmd_vel = nh_global.subscribe("cmd_vel", 10, velCallback);
+    ros::Subscriber odrive_cmd_vel = nh.subscribe("/cmd_vel", 10, velCallback);
 
     diagnostic_updater::Updater odrive_diagnostics_updater;
     odrive_diagnostics_updater.setHardwareIDf("ODRIVE S/N: %s", od_sn.c_str());
