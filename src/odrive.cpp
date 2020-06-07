@@ -229,7 +229,7 @@ void resetOdometry(tf::TransformBroadcaster odom_broadcaster, ros::Publisher odo
     robot_x_pos = 0.0;
     robot_y_pos = 0.0;
 
-    void sendOdometry(odom_broadcaster, odometry_pub);
+    sendOdometry(odom_broadcaster, odometry_pub);
 };
 
 void publishOdometry(ros::Publisher odometry_pub, const ros_odrive::odrive_msg odrive_msg,
