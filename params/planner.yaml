@@ -1,5 +1,6 @@
 controller_frequency: 5.0
-recovery_behaviour_enabled: true
+recovery_behaviour_enabled: false
+clearing_rotation_allowed: false
 
 NavfnROS:
   allow_unknown: true # Specifies whether or not to allow navfn to create plans that traverse unknown space.
@@ -12,7 +13,7 @@ TrajectoryPlannerROS:
   acc_lim_theta : 8
 
   max_vel_x: 0.05
-  min_vel_x: -0.05
+  min_vel_x: 0.001
 
   max_vel_y: 0.0  # zero for a differential drive robot
   min_vel_y: 0.0

@@ -301,6 +301,20 @@ void velCallback(const geometry_msgs::Twist &vel) {
     float right = -1.0 * encoder_click_per_meter * vr;
     float left = encoder_click_per_meter * vl;
 
+    if(right < -60.0){
+        right = -60.0;
+    }
+    if(right > 60.0){
+        right = 60.0;
+    }
+
+    if(left < -60.0){
+        left = -60.0;
+    }
+    if(left > 60.0){
+        left = 60.0;
+    }
+
     cmd = "axis1.controller.vel_setpoint";
     writeOdriveData(endpoint, odrive_json,
                     cmd, right);
