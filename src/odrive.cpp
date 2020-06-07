@@ -407,7 +407,7 @@ int main(int argc, char **argv) {
 
     //test robot width
     nh.param<float>("base_width", base_width, 0.58);
-    nh.param<float>("wheel_radius", wheel_radius, 0.235 / 2);
+    nh.param<float>("wheel_radius", wheel_radius, 0.240 / 2);
     nh.param("encoder_click_per_rotate", encoder_click_per_rotate, 90);
 
     wheel_circum = 2.0 * wheel_radius * M_PI;
