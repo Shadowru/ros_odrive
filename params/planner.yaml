@@ -13,7 +13,7 @@ TrajectoryPlannerROS:
   acc_lim_theta : 6
 
   max_vel_x: 0.05
-  min_vel_x: 0.001
+  min_vel_x: 0.003
 
   max_vel_y: 0.0  # zero for a differential drive robot
   min_vel_y: 0.0
