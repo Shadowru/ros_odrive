@@ -403,11 +403,6 @@ int main(int argc, char **argv) {
     ros::Publisher odrive_odometry = nh_global.advertise<nav_msgs::Odometry>(odom_frame, 100);
     tf::TransformBroadcaster odom_broadcaster;
 
-    current_time = ros::Time::now();
-    last_time = ros::Time::now();
-
-    resetOdometry(odom_broadcaster, odrive_odometry);
-
     ros::Publisher joint_state_pub = nh.advertise<sensor_msgs::JointState>("joint_states", 10);
 
 	joint_states.header.frame_id = "base_link";
@@ -457,7 +452,10 @@ int main(int argc, char **argv) {
 
     setPID(0.04, 0.15);
 
+    current_time = ros::Time::now();
+    last_time = ros::Time::now();
 
+    resetOdometry(odom_broadcaster, odrive_odometry);
 
     // Example loop - reading values and updating motor velocity
     ROS_INFO("Starting idle loop");
