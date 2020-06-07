@@ -10,6 +10,7 @@
 <!--  <include file="$(find ros_odrive)/launch/cartographer_ros.launch"/>-->
 <!--  <include file="$(find ros_odrive)/launch/diagnostics.launch"/>-->
   <include file="$(find ros_odrive)/launch/move_base.launch"/>
+  <include file="$(find ros_odrive)/launch/explore_light.launch"/>
   <include file="$(find ros_odrive)/launch/webui.launch"/>
 
   <node name="ros_odrive" pkg="ros_odrive" type="ros_odrive" required="true">
