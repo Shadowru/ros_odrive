@@ -11,6 +11,8 @@ resolution: 0.1
 obstacle_range: 3.5
 raytrace_range: 4.0
 
+min_obstacle_height: 0.0
+
 #layer definitions
 static:
   map_topic: /map
