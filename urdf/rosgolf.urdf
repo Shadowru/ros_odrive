@@ -130,4 +130,16 @@
         <origin xyz="0.0 -0.04 0.26" rpy="0 0 0"/>
     </joint>
 
+    <link name="camera_odom_frame" type="fixed">
+        <geometry>
+            <box size="0.11 0.015 0.025"/>
+        </geometry>
+    </link>
+
+    <joint name="base_to_camera" type="fixed">
+        <parent link="base_link"/>
+        <child link="camera_odom_frame"/>
+        <origin xyz="0.48 -0.045 0.145" rpy="0 0 0"/>
+    </joint>
+
 </robot>

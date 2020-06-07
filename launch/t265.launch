@@ -6,8 +6,6 @@ https://github.com/IntelRealSense/librealsense/blob/master/third-party/libtm/lib
 -->
 <launch>
 
-    <node pkg="tf" type="static_transform_publisher" name="camera_link" args="0.0 0.0 0.0 0.0 0.0 0.0 /base_link /camera_odom_frame 100" />
-
     <arg name="serial_no"           default=""/>
     <arg name="usb_port_id"         default=""/>
     <arg name="device_type"         default="t265"/>
