@@ -362,6 +362,12 @@ void setPID(float p, float i){
                     "axis1.controller.config.vel_gain", p);
     writeOdriveData(endpoint, odrive_json,
                     "axis1.controller.config.vel_integrator_gain", i);
+
+    float vel_limit = 60;
+    writeOdriveData(endpoint, odrive_json,
+                    "axis0.controller.config.vel_limit", vel_limit);
+    writeOdriveData(endpoint, odrive_json,
+                    "axis1.controller.config.vel_limit", vel_limit);
 }
 
 /**
