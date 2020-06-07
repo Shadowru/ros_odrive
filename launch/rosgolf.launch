@@ -9,7 +9,7 @@
 <!--  <include file="$(find ros_odrive)/launch/hector_slam.launch"/>-->
 <!--  <include file="$(find ros_odrive)/launch/cartographer_ros.launch"/>-->
 <!--  <include file="$(find ros_odrive)/launch/diagnostics.launch"/>-->
-<!--  <include file="$(find ros_odrive)/launch/move_base.launch"/>-->
+  <include file="$(find ros_odrive)/launch/move_base.launch"/>
 <!--  <include file="$(find ros_odrive)/launch/explore_light.launch"/>-->
   <include file="$(find ros_odrive)/launch/webui.launch"/>
 
