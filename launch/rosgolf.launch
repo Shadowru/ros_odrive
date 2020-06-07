@@ -21,6 +21,8 @@
     <!--    <remap from="rosodrive/odom" to="odom"/>-->
   </node>
 
-  <node pkg="ros_odrive" type="robot_pose_publisher" name="rosgolf_pose_publisher"/>
+  <node pkg="ros_odrive" type="robot_pose_publisher" name="rosgolf_pose_publisher">
+    <param name="is_stamped" value="true"/>
+  </node>
 
 </launch>
