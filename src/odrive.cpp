@@ -501,7 +501,7 @@ int main(int argc, char **argv) {
 
     while (ros::ok()) {
         // Publish status message
-        ros_odrive::odrive_msg odrive_msg = publishMessage(odrive_pub);
+        ros_odrive::odrive_msg odrive_msg = publishMessage(odrive_pub, battery_pub);
         // Publish odometry message
         current_time = ros::Time::now();
         publishOdometry(odrive_odometry, odrive_msg, odom_broadcaster, current_time, last_time);

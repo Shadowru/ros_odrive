@@ -21,6 +21,7 @@
 #include "tf/transform_broadcaster.h"
 #include "nav_msgs/Odometry.h"
 #include "sensor_msgs/JointState.h"
+#include "sensor_msgs/BatteryState.h"
 #include "ros_odrive/odrive_endpoint.hpp"
 #include "ros_odrive/odrive_utils.hpp"
 #include "ros_odrive/odrive_enums.hpp"
