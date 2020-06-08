@@ -43,9 +43,11 @@
     <arg name="port" value="9090"/>
   </include>
 
-  <node pkg="frontier_exploration" type="explore_client" name="explore_client" output="screen"/>
+  <node pkg="exploration_server" type="plugin_client" name="plugin_client" output="screen">
 
-  <node pkg="frontier_exploration" type="explore_server" name="explore_server" output="screen">
+  </node>
+
+  <node pkg="exploration_server" type="exploration_server_node" name="exploration_server_node" output="screen">
     <param name="frequency" type="double" value="1.0"/>
     <param name="goal_aliasing" type="double" value="0.1"/>
     <rosparam ns="explore_costmap" subst_value="true" file="$(find ros_odrive)/params/exploration.yaml" command="load" />
