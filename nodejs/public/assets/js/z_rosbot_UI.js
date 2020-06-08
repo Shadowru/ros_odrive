@@ -77,7 +77,7 @@ window.onload = function () {
 	});
 
 	ros = new ROSLIB.Ros({
-		url: "ws://" + "192.168.1.80" + ":9090"
+		url: "ws://" + location.hostname + ":9090"
 	});
 
 	cmdVel = new ROSLIB.Topic({
