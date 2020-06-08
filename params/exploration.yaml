@@ -31,7 +31,7 @@ footprint: [[-0.156,-0.31], [0.156, -0.31], [0.558, -0.24], [0.558, 0.24], [0.15
 
     sensor:
       observation_sources: laser
-      laser: {data_type: LaserScan, clearing: true, marking: true, topic: scan, inf_is_valid: true, raytrace_range: 0.2, obstacle_range: $(arg sensor_range)}
+      laser: {data_type: LaserScan, clearing: true, marking: true, topic: scan, inf_is_valid: true, raytrace_range: 0.2, obstacle_range: 0.2}
 
     inflation:
       inflation_radius: 0.2
