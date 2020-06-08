@@ -237,9 +237,8 @@ void resetOdometry(tf::TransformBroadcaster odom_broadcaster, ros::Publisher odo
     sendOdometry(odom_broadcaster, odometry_pub);
 };
 
-void publishOdometry(ros::Publisher odometry_pub, const ros_odrive::odrive_msg odrive_msg,
-                     tf::TransformBroadcaster odom_broadcaster, const ros::Time current_time,
-                     const ros::Time last_time) {
+void publishOdometry(ros::Publisher odometry_pub, tf::TransformBroadcaster odom_broadcaster,
+                     const ros::Time current_time, const ros::Time last_time) {
 
     double curr_wheel_L_ang_pos = getAngularPos(LEFT_AXIS);
     double curr_wheel_R_ang_pos = getAngularPos(RIGHT_AXIS);
