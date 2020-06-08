@@ -32,7 +32,7 @@
   <node name="ros_odrive" pkg="ros_odrive" type="ros_odrive" required="true" output="screen">
     <param name="rate" value="10"/>
     <param name="od_sn" value="0x335831593536"/>
-    <!--    <remap from="rosodrive/odom" to="odom"/>-->
+    <remap from="rosodrive/odom" to="odom"/>
   </node>
 
   <node pkg="ros_odrive" type="robot_pose_publisher" name="rosgolf_pose_publisher">
