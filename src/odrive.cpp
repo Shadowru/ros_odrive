@@ -158,7 +158,6 @@ void publishOdriveMessage(ros::Publisher odrive_pub) {
     // Publish message
     odrive_pub.publish(msg);
 
-    return msg;
 }
 
 
