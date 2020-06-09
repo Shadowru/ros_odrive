@@ -50,6 +50,7 @@ catkin_package(
 include_directories(
   include
   ${catkin_INCLUDE_DIRS}
+  ${OpenCV_INCLUDE_DIRS}
 )
 
 add_executable(ros_odrive src/odrive.cpp src/odrive_endpoint.cpp src/odrive_utils.cpp)
