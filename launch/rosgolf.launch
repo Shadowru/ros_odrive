@@ -29,8 +29,6 @@
     <param name="particles" value="100" />
   </node>
 
-  <node pkg="ros_odrive" type="depth_clipping_node" name="depth_clipping_node"/>
-
   <node pkg="ros_odrive" type="map_to_img_node" name="map_to_img" output="screen">
     <param name="tile_width" value="640"/>
     <param name="tile_height" value="480"/>

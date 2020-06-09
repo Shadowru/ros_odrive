@@ -50,7 +50,6 @@ catkin_package(
 include_directories(
   include
   ${catkin_INCLUDE_DIRS}
-  ${OpenCV_INCLUDE_DIRS}
 )
 
 add_executable(ros_odrive src/odrive.cpp src/odrive_endpoint.cpp src/odrive_utils.cpp)
@@ -60,13 +59,6 @@ target_link_libraries(ros_odrive ${usb-1.0_LIBRARIES} ${catkin_LIBRARIES} ${json
 add_executable(robot_pose_publisher src/robot_pose_publisher.cpp)
 add_dependencies(robot_pose_publisher ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(robot_pose_publisher ${catkin_LIBRARIES})
-
-add_executable(depth_clipping_node src/depth_clipping.cpp src/GridMap2D.cpp)
-
-target_link_libraries(depth_clipping_node
-  ${catkin_LIBRARIES}
-  ${OpenCV_LIBRARIES}
-)
 
 add_executable(map_to_img_node src/map_to_img.cpp src/MapAsImageProvider.cpp)
 
