@@ -23,7 +23,7 @@ void far_clipping_callback(const std_msgs::Float32 &clippingDistPtr)
 bool updateMap(gridmap_2d::GridMap2DPtr map){
   try
   {
-    sensor_msgs::ImagePtr msg = cv_bridge::CvImage(std_msgs::Header(), "CV_8UC1", map->binary()).toImageMsg();
+    sensor_msgs::ImagePtr msg = cv_bridge::CvImage(std_msgs::Header(), "CV_8UC1", map->binaryMap()).toImageMsg();
     image_pub.publish(msg);
   }
   catch (cv_bridge::Exception &e)
