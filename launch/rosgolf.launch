@@ -29,13 +29,25 @@
     <param name="particles" value="100" />
   </node>
 
+  <node pkg="ros_odrive" type="depth_clipping_node" name="depth_clipping_node"/>
+
+  <node pkg="ros_odrive" type="map_to_img_node" name="map_to_img" output="screen">
+    <param name="tile_width" value="640"/>
+    <param name="tile_height" value="480"/>
+    <param name="parent_frame" value="/map"/>
+    <param name="child_frame" value="/base_link"/>
+    <param name="draw_robot" value="true"/>
+    <param name="publish_full_map" value="false"/>
+    <param name="publish_map_tile" value="true"/>
+  </node>
+
   <node name="ros_odrive" pkg="ros_odrive" type="ros_odrive" required="true" output="screen">
     <param name="rate" value="10"/>
     <param name="od_sn" value="0x335831593536"/>
     <remap from="ros_odrive/odom" to="odom"/>
   </node>
 
-    <node pkg="ros_odrive" type="robot_pose_publisher" name="rosgolf_pose_publisher">
+  <node pkg="ros_odrive" type="robot_pose_publisher" name="rosgolf_pose_publisher">
     <param name="is_stamped" value="true"/>
   </node>
 
@@ -46,7 +58,6 @@
   </include>
 
   <node pkg="exploration_server" type="plugin_client" name="plugin_client" output="screen">
-
   </node>
 
   <node pkg="exploration_server" type="exploration_server_node" name="exploration_server_node" output="screen">
