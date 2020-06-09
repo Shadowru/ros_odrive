@@ -150,7 +150,7 @@
 
     <joint name="base_to_sonar" type="fixed">
         <parent link="base_link"/>
-        <child link="camera_odom_frame"/>
+        <child link="sonar"/>
         <origin xyz="0.48 0.0 0.145" rpy="0 0 0"/>
     </joint>
 
