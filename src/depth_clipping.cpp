@@ -6,6 +6,7 @@
 #include <cv_bridge/cv_bridge.h>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
+#include <nav_msgs/OccupancyGrid.h>
 
 ros::Publisher image_pub;
 double far_threshold_default = 2.5;
