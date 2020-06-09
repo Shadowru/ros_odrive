@@ -121,9 +121,9 @@ TebLocalPlannerROS:
   min_turning_radius: 0.0
   footprint_model: # types: "point", "circular", "two_circles", "line", "polygon"
     type: "line"
-    radius: 0.35 # for type "circular"
+    radius: 0.3 # for type "circular"
     line_start: [-0.1, 0.0] # for type "line"
-    line_end: [0.358, 0.0] # for type "line"
+    line_end: [0.458, 0.0] # for type "line"
     front_offset: 0.2 # for type "two_circles"
     front_radius: 0.2 # for type "two_circles"
     rear_offset: 0.2 # for type "two_circles"
@@ -133,7 +133,7 @@ TebLocalPlannerROS:
       # GoalTolerance
 
   xy_goal_tolerance: 0.2
-  yaw_goal_tolerance: 0.2
+  yaw_goal_tolerance: 0.7
   free_goal_vel: False
 
     # Obstacles
