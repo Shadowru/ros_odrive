@@ -64,6 +64,7 @@ add_executable(depth_clipping_node src/depth_clipping.cpp src/GridMap2D.cpp)
 
 target_link_libraries(depth_clipping_node
   ${catkin_LIBRARIES}
+  ${OpenCV_LIBRARIES}
 )
 
 add_executable(map_to_img_node src/map_to_img.cpp src/MapAsImageProvider.cpp)
