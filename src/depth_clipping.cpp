@@ -20,21 +20,21 @@ void far_clipping_callback(const std_msgs::Float32 &clippingDistPtr)
   far_threshold = clippingDistPtr.data;
 }
 
-void mapCallback(const nav_msgs::OccupancyGridConstPtr &occupancy_map){
-    gridmap_2d::GridMap2DPtr map(new gridmap_2d::GridMap2D(occupancy_map));
-    updateMap(map);
-}
-
 bool updateMap(gridmap_2d::GridMap2DPtr map){
   try
   {
-    image_pub.publish(map.binaryMap()->toImageMsg());
+    image_pub.publish(map->binaryMap()->toImageMsg());
   }
   catch (cv_bridge::Exception &e)
   {
     ROS_ERROR("cv_bridge exception: %s", e.what());
-    return;
+    return false;
   }
+}
+
+void mapCallback(const nav_msgs::OccupancyGridConstPtr &occupancy_map){
+    gridmap_2d::GridMap2DPtr map(new gridmap_2d::GridMap2D(occupancy_map));
+    updateMap(map);
 }
 
 int main(int argc, char **argv)
