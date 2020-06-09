@@ -35,9 +35,11 @@
     <remap from="ros_odrive/odom" to="odom"/>
   </node>
 
-  <node pkg="ros_odrive" type="robot_pose_publisher" name="rosgolf_pose_publisher">
+    <node pkg="ros_odrive" type="robot_pose_publisher" name="rosgolf_pose_publisher">
     <param name="is_stamped" value="true"/>
   </node>
+
+  <node name="urm_37_v40" pkg="urm_37_v40" type="node" output="screen"/>
 
   <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch" >
     <arg name="port" value="9090"/>
