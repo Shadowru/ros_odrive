@@ -46,6 +46,8 @@ vector<double> eff(2, 0.0);
 
 #define ODOM_COV 0.005
 
+float double vel_limit = 15;
+
 void msgCallback(const ros_odrive::odrive_ctrl::ConstPtr &msg) {
     std::string cmd;
     uint8_t u8val;
@@ -305,18 +307,18 @@ void velCallback(const geometry_msgs::Twist &vel) {
     float right = -1.0 * encoder_cpm * vr;
     float left = encoder_cpm * vl;
 
-    if(right < -60.0){
-        right = -60.0;
+    if(right < - vel_limit){
+        right = -vel_limit;
     }
-    if(right > 60.0){
-        right = 60.0;
+    if(right > vel_limit){
+        right = vel_limit;
     }
 
-    if(left < -60.0){
-        left = -60.0;
+    if(left < -vel_limit){
+        left = -vel_limit;
     }
-    if(left > 60.0){
-        left = 60.0;
+    if(left > vel_limit){
+        left = vel_limit;
     }
 
     cmd = "axis1.controller.vel_setpoint";
