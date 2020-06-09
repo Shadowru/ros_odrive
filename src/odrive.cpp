@@ -491,7 +491,7 @@ int main(int argc, char **argv) {
         updateTargetConfig(endpoint, odrive_json, od_cfg);
     }
 
-    setPID(0.05, 0.1);
+    setPID(0.018, 0.4);
 
     current_time = ros::Time::now();
     last_time = ros::Time::now();
