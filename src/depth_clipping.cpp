@@ -8,7 +8,7 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <nav_msgs/OccupancyGrid.h>
 
-#include "ros_odrive/GrdiMap2D.h"
+#include "ros_odrive/GridMap2D.h"
 
 ros::Publisher image_pub;
 double far_threshold_default = 2.5;
