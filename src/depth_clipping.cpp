@@ -23,7 +23,7 @@ void far_clipping_callback(const std_msgs::Float32 &clippingDistPtr)
 bool updateMap(gridmap_2d::GridMap2DPtr map){
   try
   {
-    image_pub.publish(map->binaryMap()->toImageMsg());
+    image_pub.publish(map->binaryMap().toImageMsg());
   }
   catch (cv_bridge::Exception &e)
   {
