@@ -26,7 +26,7 @@ inflation:
   inflation_radius: 0.2
 
 sonar_layer:
-  topics: ["/sonar0"]
+  topics: ["/sonar_0"]
   no_readings_timeout: 2.0
   clear_threshold: 0.05
   mark_threshold: 0.15
