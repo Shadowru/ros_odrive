@@ -17,7 +17,7 @@ void far_clipping_callback(const std_msgs::Float32 &clippingDistPtr)
   far_threshold = clippingDistPtr.data;
 }
 
-void mapCallback(const nav_msgs::OccupancyGridConstPtr& occupancy_map){
+void mapCallback(const nav_msgs::OccupancyGridConstPtr &occupancy_map){
     gridmap_2d::GridMap2DPtr map(new gridmap_2d::GridMap2D(occupancy_map));
     updateMap(map);
 }
