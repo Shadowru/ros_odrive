@@ -492,7 +492,7 @@ int main(int argc, char **argv) {
     }
 
     //setPID(0.05, 0.1);
-    setPID(0.018, 0.4);
+    setPID(0.03, 0.4);
 
     current_time = ros::Time::now();
     last_time = ros::Time::now();
