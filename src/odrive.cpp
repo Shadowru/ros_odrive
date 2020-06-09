@@ -46,7 +46,7 @@ vector<double> eff(2, 0.0);
 
 #define ODOM_COV 0.005
 
-float double vel_limit = 15;
+float vel_limit = 15;
 
 void msgCallback(const ros_odrive::odrive_ctrl::ConstPtr &msg) {
     std::string cmd;
