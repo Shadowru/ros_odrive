@@ -7,6 +7,7 @@ find_package(catkin REQUIRED COMPONENTS
   message_generation
   roscpp
   std_msgs
+  nav_msgs
   tf
   diagnostic_updater
   cv_bridge
@@ -37,7 +38,7 @@ set(jsoncpp_LIBRARIES jsoncpp)
 
 catkin_package(
   INCLUDE_DIRS include
-  CATKIN_DEPENDS message_runtime roscpp std_msgs
+  CATKIN_DEPENDS message_runtime roscpp std_msgs nav_msgs
   DEPENDS ${rt_LIBRARIES} ${pthread_LIBRARIES} ${usb-1.0_LIBRARIES} ${jsoncpp_LIBRARIES}
 )
 
