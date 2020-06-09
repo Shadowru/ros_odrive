@@ -1,9 +1,8 @@
 #include <ros/ros.h>
 #include <std_msgs/Float32.h>
 #include <sensor_msgs/Image.h>
+#include <sensor_msgs/Image.h>
 #include <message_filters/subscriber.h>
-#include <message_filters/synchronizer.h>
-#include <message_filters/sync_policies/approximate_time.h>
 #include <cv_bridge/cv_bridge.h>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
@@ -27,7 +26,6 @@ bool updateMap(gridmap_2d::GridMap2DPtr map){
     ptr = map.binaryMap();
 }
 
-
 void callback()
 {
   try
@@ -49,7 +47,7 @@ int main(int argc, char **argv)
   ros::Subscriber clipping_distance_sub = nh.subscribe("/clipping/distance", 1, far_clipping_callback);
 
   ros::Subscriber maP_subscripber = nh.subscribe<nav_msgs::OccupancyGrid>(
-      "/map", 1, mapCallback, this);
+      "/map", 1, mapCallback);
 
   image_pub = nh.advertise<sensor_msgs::Image>("/clipping/output", 1);
   ros::spin();
