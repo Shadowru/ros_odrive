@@ -32,10 +32,7 @@ var pose_subscriber;
 var rpy_subscriber;
 var battery_subscriber;
 
-var sensorSubscriberFL;
-var sensorSubscriberFR;
-var sensorSubscriberRL;
-var sensorSubscriberRR;
+var sensorSubscriber;
 
 var timerInstance;
 var watchdogTimerInstance;
@@ -55,6 +52,7 @@ var wifiSubscriber;
 var mapScalePublisher;
 var mapScaleMsg;
 var batteryText;
+var axisText;
 
 window.onload = function () {
 	console.log("onLoad triggered");
@@ -76,8 +74,10 @@ window.onload = function () {
 		}
 	});
 
+	const robot_host = location.hostname;
+
 	ros = new ROSLIB.Ros({
-		url: "ws://" + location.hostname + ":9090"
+		url: "ws://" + robot_host + "" + ":9090"
 	});
 
 	cmdVel = new ROSLIB.Topic({
@@ -136,24 +136,9 @@ window.onload = function () {
 		messageType: 'geometry_msgs/Vector3'
 	})
 
-	sensorSubscriberFL = new ROSLIB.Topic({
+	sensorSubscriber = new ROSLIB.Topic({
 		ros: ros,
-		name: '/range/fl',
-		messageType: 'sensor_msgs/Range'
-	});
-	sensorSubscriberFR = new ROSLIB.Topic({
-		ros: ros,
-		name: '/range/fr',
-		messageType: 'sensor_msgs/Range'
-	});
-	sensorSubscriberRL = new ROSLIB.Topic({
-		ros: ros,
-		name: '/range/rl',
-		messageType: 'sensor_msgs/Range'
-	});
-	sensorSubscriberRR = new ROSLIB.Topic({
-		ros: ros,
-		name: '/range/rr',
+		name: '/sonar_0',
 		messageType: 'sensor_msgs/Range'
 	});
 
@@ -168,7 +153,7 @@ window.onload = function () {
 		name: '/wifi_status',
 		messageType: 'diagnostic_msgs/DiagnosticArray'
 	});
-
+/*
 	mySwiper = new Swiper('.swiper-container', {
 		direction: 'horizontal',
 		loop: false,
@@ -178,17 +163,36 @@ window.onload = function () {
 		effect: 'slide',
 		followFinger: false,
 	})
-
 	mySwiper.on('slideChangeTransitionEnd', function () {
 		window.dispatchEvent(new Event('resize'));
 	});
+*/
+
+	// Create the main viewer.
+	var viewer = new ROS3D.Viewer({
+		divID : 'video',
+		width : 600,
+		height : 600,
+		antialias : true
+	});
+
+	// Setup the map client.
+	var gridClient = new ROS3D.OccupancyGridClient({
+		ros : ros,
+		rootObject : viewer.scene,
+		topic: '/move_base/local_costmap/costmap',
+		continuous: true,
+		cameraPosition: {x: 0, y: 0, z: 0}
+	});
+
+	viewer.start();
 
 	videoContainer = document.getElementById('video');
 	videoContainer.onload = function () {
 		setView()
 	};
-	document.getElementById('video').src = "http://" + location.hostname + ":8082/stream?topic=/clipping/output&type=mjpeg&quality=100";
-	document.getElementById('map-video').src = "http://" + location.hostname + ":8082/stream?topic=/map_image/tile&type=mjpeg&quality=100";
+
+	document.getElementById('map-video').src = "http://" + robot_host + ":8082/stream?topic=/map_image/tile&type=mjpeg&quality=100";
 
 	mapZoomSlider = document.getElementById("map-zoom");
 	mapZoomSlider.oninput = function () {
@@ -240,7 +244,7 @@ window.onload = function () {
 		lastMsgMs = lastMsgDate.getTime();
 	});
 
-	sensorSubscriberFL.subscribe(function (range) {
+	sensorSubscriber.subscribe(function (range) {
 		if (range.range > range.max_range || range.range < range.min_range) {
 			document.getElementById("sensor-label-fl").innerHTML = "Out of range";
 		} else {
@@ -250,40 +254,16 @@ window.onload = function () {
 		lastMsgMs = lastMsgDate.getTime();
 	});
 
-	sensorSubscriberFR.subscribe(function (range) {
-		if (range.range > range.max_range || range.range < range.min_range) {
-			document.getElementById("sensor-label-fr").innerHTML = "Out of range";
-		} else {
-			document.getElementById("sensor-label-fr").innerHTML = range.range.toFixed(2) + "m";
-		}
-		lastMsgDate = new Date();
-		lastMsgMs = lastMsgDate.getTime();
-	});
-
-	sensorSubscriberRL.subscribe(function (range) {
-		if (range.range > range.max_range || range.range < range.min_range) {
-			document.getElementById("sensor-label-rl").innerHTML = "Out of range";
-		} else {
-			document.getElementById("sensor-label-rl").innerHTML = range.range.toFixed(2) + "m";
-		}
-		lastMsgDate = new Date();
-		lastMsgMs = lastMsgDate.getTime();
-	});
-
-	sensorSubscriberRR.subscribe(function (range) {
-		if (range.range > range.max_range || range.range < range.min_range) {
-			document.getElementById("sensor-label-rr").innerHTML = "Out of range";
-		} else {
-			document.getElementById("sensor-label-rr").innerHTML = range.range.toFixed(2) + "m";
-		}
-		lastMsgDate = new Date();
-		lastMsgMs = lastMsgDate.getTime();
-	});
-
 	batteryText = document.getElementById("batery-percent");
+	axisText = document.getElementById("axis-status");
 	battery_subscriber.subscribe(function (battery) {
 		const battery_voltage = parseFloat(battery.status[0].values[0].value);
 		setBatteryPercentage(100 * (battery_voltage - min_voltage) / (max_voltage - min_voltage), battery_voltage);
+		const A1_I = parseFloat(battery.status[0].values[1].value);
+		const A1_temp = parseFloat(battery.status[0].values[3].value);
+		const A2_I = parseFloat(battery.status[0].values[2].value);
+		const A2_temp = parseFloat(battery.status[0].values[4].value);
+		setAxisStatus(A1_I, A1_temp, A2_I, A2_temp);
 		lastMsgDate = new Date();
 		lastMsgMs = lastMsgDate.getTime();
 	});
@@ -330,11 +310,11 @@ window.onload = function () {
 	setView();
 
 	var slider = document.getElementById("clipRange");
-
+/*
 	slider.oninput = function () {
 		updateClippingDistance(this.value / 100);
 	}
-
+*/
 	watchdogTimerInstance = new Timer();
 	watchdogTimerInstance.addEventListener('secondTenthsUpdated', watchdogTimer);
 	watchdogTimerInstance.start();
@@ -469,6 +449,10 @@ function setView() {
 	joyPosX = (videoRect.right - videoRect.left - joyWidth) / 2;
 	createJoystick(0, 0, joyWidth, joyHeight);
 	initTeleopKeyboard();
+}
+
+function setAxisStatus(A1_I, A1_temp, A2_I, A2_temp){
+	axisText.innerHTML = "<strong> Axis current: " + A1_I.toFixed(2) + "/" + -1.0 * A2_I.toFixed(2) +" Axis temp : " + A1_temp.toFixed(2) + "/" + A2_temp.toFixed(2) + "</strong>";
 }
 
 function setBatteryPercentage(percentage, voltage) {

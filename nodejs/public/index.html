@@ -35,15 +35,16 @@
                                         <p id="sensor-label-fl"
                                             class="sensor-label position-relative text-light m-0 p-1">FL
                                         </p>
-                                        <p id="current-clip-dist"
-                                            class="sensor-label position-relative text-light m-0 p-1">
-                                            Move slider to set image clipping distance: 2.5m
-                                        </p>
+<!--                                        <p id="current-clip-dist"-->
+<!--                                            class="sensor-label position-relative text-light m-0 p-1">-->
+<!--                                            Move slider to set image clipping distance: 2.5m-->
+<!--                                        </p>-->
                                         <p id="sensor-label-fr"
                                             class="sensor-label position-relative text-light m-0 p-1">FR
                                         </p>
                                     </div>
-                                    <img id="video" class="w-100">
+                                    <div id="video" class="w-100">
+                                    </div>
                                     <div class="row justify-content-between position-absolute m-0 p-0 fixed-bottom">
                                         <p id="sensor-label-rl"
                                             class="sensor-label position-relative text-light m-0 p-1">RL
@@ -89,6 +90,11 @@
                                         <div class="mx-1 d-flex justify-content-center"
                                         id="wifi-status-container">
                                         </div>
+                                    </div>
+                                    <div class="text-center mx-1" id="axis-container">
+                                        <p id="axis-status" class="m-0 p-0">
+                                            Axis Status
+                                        </p>
                                     </div>
                                     <div class="mr-1" id="battery-container">
                                         <p id="batery-percent" class="m-0 p-0">
@@ -240,11 +246,14 @@
     <script src="assets/js/nav2d.js"></script>
     <script src="assets/js/nipplejs.min.js"></script>
     <script src="assets/js/ros2d.js"></script>
-    <script src="assets/js/roslib.min.js"></script>
+    <script src="https://static.robotwebtools.org/roslibjs/current/roslib.min.js"></script>
+<!--    <script src="assets/js/roslib.min.js"></script>-->
     <script src="assets/js/swiper.min.js"></script>
     <script src="assets/js/three.min.js"></script>
     <script src="assets/js/notify.min.js"></script>
     <script src="assets/js/ros2dscan.js"></script>
+    <script src="https://static.robotwebtools.org/ros3djs/current/ros3d.min.js"></script>
+    <script type="text/javascript" src="http://static.robotwebtools.org/threejs/current/three.min.js"></script>
     <script src="assets/js/z_rosbot_UI.js"></script>
 </body>
 
