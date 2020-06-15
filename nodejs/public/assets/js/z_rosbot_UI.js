@@ -166,7 +166,6 @@ window.onload = function () {
 	mySwiper.on('slideChangeTransitionEnd', function () {
 		window.dispatchEvent(new Event('resize'));
 	});
-*/
 
 	// Create the main viewer.
 	var viewer = new ROS3D.Viewer({
@@ -186,6 +185,7 @@ window.onload = function () {
 	});
 
 	viewer.start();
+*/
 
 	videoContainer = document.getElementById('video');
 	videoContainer.onload = function () {
