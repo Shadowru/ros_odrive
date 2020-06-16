@@ -34,3 +34,5 @@ rostopic pub -1 /move_base_simple/goal geometry_msgs/PoseStamped '{header: {stam
 
 sudo i2cdetect -r -y 1
 
+
+cat /sys/devices/virtual/thermal/thermal_zone0/temp
