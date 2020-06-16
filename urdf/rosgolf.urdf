@@ -162,7 +162,7 @@
 
     <joint name="imu_to_sonar" type="fixed">
         <parent link="base_link"/>
-        <child link="sonar"/>
+        <child link="imu"/>
         <origin xyz="0.10 -10.0 0.18" rpy="0 0 0"/>
     </joint>
 
