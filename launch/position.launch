@@ -17,7 +17,7 @@
     <node name="ros_odrive" pkg="ros_odrive" type="ros_odrive" required="true" output="screen">
         <param name="rate" value="10"/>
         <param name="od_sn" value="0x335831593536"/>
-        <!--    <remap from="ros_odrive/odom" to="odom"/>-->
+        <remap from="ros_odrive/odom" to="odom"/>
     </node>
     <node ns="imu" name="imu_node" pkg="imu_bno055" type="bno055_i2c_node" respawn="true" respawn_delay="2">
         <param name="device" type="string" value="/dev/i2c-5"/>
@@ -26,7 +26,7 @@
     </node>
 
     <node pkg="robot_pose_ekf" type="robot_pose_ekf" name="robot_pose_ekf">
-        <param name="output_frame" value="odom"/>
+<!--        <param name="output_frame" value="odom"/>-->
         <param name="base_footprint_frame" value="base_link"/>
         <param name="freq" value="30.0"/>
         <param name="sensor_timeout" value="1.0"/>
@@ -35,7 +35,7 @@
         <param name="vo_used" value="false"/>
         <param name="debug" value="true"/>
         <param name="self_diagnose" value="false"/>
-        <remap from="odom" to="ros_odrive/odom"/>
+<!--        <remap from="odom" to="ros_odrive/odom"/>-->
         <remap from="imu" to="imu/data"/>
         <remap from="robot_pose_ekf/odom_combined" to="odom"/>
     </node>
