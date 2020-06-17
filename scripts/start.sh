@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 echo 1 > /proc/sys/vm/drop_caches
-ip="$(ifconfig | grep -A 1 'eth0' | tail -1 | cut -d ':' -f 2 | cut -d ' ' -f 1)"
-export ROS_IP=$ip
+ip4=$(/sbin/ip -o -4 addr list wlan0 | awk '{print $4}' | cut -d/ -f1)
+export ROS_IP=$ip4
 export ROS_IP
 roslaunch ros_odrive position.launch
