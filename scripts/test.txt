@@ -28,6 +28,7 @@ rosrun rqt_graph rqt_graph
 
 roslaunch ros_odrive explore_light.launch
 roslaunch ros_odrive rosgolf_localization.launch
+roslaunch ros_odrive position.launch
 
 rostopic pub -1 /move_base_simple/goal geometry_msgs/PoseStamped '{header: {stamp: now, frame_id: "map"}, pose: {position: {x: 0.5, y: 0.0, z: 0.0}, orientation: {w: 1.0}}}'
 
