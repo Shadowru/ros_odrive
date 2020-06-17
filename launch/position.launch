@@ -37,7 +37,7 @@
         <param name="self_diagnose" value="false"/>
 <!--        <remap from="odom" to="ros_odrive/odom"/>-->
         <remap from="imu" to="imu/data"/>
-        <remap from="robot_pose_ekf/odom_combined" to="odom"/>
+<!--        <remap from="robot_pose_ekf/odom_combined" to="odom"/>-->
     </node>
 
 </launch>
