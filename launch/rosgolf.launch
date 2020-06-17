@@ -2,8 +2,15 @@
 <launch>
   <include file="$(find ros_odrive)/launch/urdf.launch"/>
 
-  <include file="$(find ros_odrive)/launch/rosgolf_localization.launch"/>
-<!--  <include file="$(find ros_odrive)/launch/robot_pose_ekf.launch"/>-->
+<!--  <include file="$(find ros_odrive)/launch/rosgolf_localization.launch"/>-->
+  <node pkg="robot_localization" type="ekf_localization_node" name="rosbot_ekf" clear_params="true">
+    <rosparam command="load" file="$(find ros_odrive)/params/ekf_params.yaml" />
+    <!--  Placeholder for output topic remapping -->
+      <remap from="odometry/filtered" to="odom"/>
+    <!-- <remap from="accel/filtered" to=""/> -->
+
+  </node>
+  <!--  <include file="$(find ros_odrive)/launch/robot_pose_ekf.launch"/>-->
   <include file="$(find ros_odrive)/launch/rplidar.launch"/>
 <!--  <include file="$(find ros_odrive)/launch/slam_toolbox.launch"/>-->
 <!--  <include file="$(find ros_odrive)/launch/hector_slam.launch"/>-->
