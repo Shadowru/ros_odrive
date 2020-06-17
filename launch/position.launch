@@ -44,11 +44,11 @@
 <!--&lt;!&ndash;        <remap from="robot_pose_ekf/odom_combined" to="odom"/>&ndash;&gt;-->
 <!--    </node>-->
 
-    <node pkg="robot_localization" type="ekf_localization_node" name="rosbot_ekf" clear_params="true">
-        <rosparam command="load" file="$(find ros_odrive)/params/ekf_params.yaml" />
-        <!--  Placeholder for output topic remapping -->
-<!--        <remap from="odometry/filtered" to="odom"/>-->
-        <!-- <remap from="accel/filtered" to=""/> -->
+<!--    <node pkg="robot_localization" type="ekf_localization_node" name="rosbot_ekf" clear_params="true">-->
+<!--        <rosparam command="load" file="$(find ros_odrive)/params/ekf_params.yaml" />-->
+<!--        &lt;!&ndash;  Placeholder for output topic remapping &ndash;&gt;-->
+<!--&lt;!&ndash;        <remap from="odometry/filtered" to="odom"/>&ndash;&gt;-->
+<!--        &lt;!&ndash; <remap from="accel/filtered" to=""/> &ndash;&gt;-->
 
-    </node>
+<!--    </node>-->
 </launch>
