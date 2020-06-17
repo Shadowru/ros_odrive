@@ -17,7 +17,7 @@
     <node name="ros_odrive" pkg="ros_odrive" type="ros_odrive" required="true" output="screen">
         <param name="rate" value="10"/>
         <param name="od_sn" value="0x335831593536"/>
-        <remap from="ros_odrive/odom" to="odom"/>
+<!--        <remap from="ros_odrive/odom" to="odom"/>-->
     </node>
     <node ns="imu" name="imu_node" pkg="imu_bno055" type="bno055_i2c_node" respawn="true" respawn_delay="2">
         <param name="device" type="string" value="/dev/i2c-5"/>
@@ -25,19 +25,26 @@
         <param name="frame_id" type="string" value="imu"/>
     </node>
 
-    <node pkg="robot_pose_ekf" type="robot_pose_ekf" name="robot_pose_ekf">
-<!--        <param name="output_frame" value="odom"/>-->
-        <param name="base_footprint_frame" value="base_link"/>
-        <param name="freq" value="30.0"/>
-        <param name="sensor_timeout" value="1.0"/>
-        <param name="odom_used" value="true"/>
-        <param name="imu_used" value="true"/>
-        <param name="vo_used" value="false"/>
-        <param name="debug" value="true"/>
-        <param name="self_diagnose" value="false"/>
-<!--        <remap from="odom" to="ros_odrive/odom"/>-->
-        <remap from="imu" to="imu/data"/>
-<!--        <remap from="robot_pose_ekf/odom_combined" to="odom"/>-->
-    </node>
+<!--    <node pkg="robot_pose_ekf" type="robot_pose_ekf" name="robot_pose_ekf">-->
+<!--&lt;!&ndash;        <param name="output_frame" value="odom"/>&ndash;&gt;-->
+<!--        <param name="base_footprint_frame" value="base_link"/>-->
+<!--        <param name="freq" value="30.0"/>-->
+<!--        <param name="sensor_timeout" value="1.0"/>-->
+<!--        <param name="odom_used" value="true"/>-->
+<!--        <param name="imu_used" value="true"/>-->
+<!--        <param name="vo_used" value="false"/>-->
+<!--        <param name="debug" value="true"/>-->
+<!--        <param name="self_diagnose" value="false"/>-->
+<!--&lt;!&ndash;        <remap from="odom" to="ros_odrive/odom"/>&ndash;&gt;-->
+<!--        <remap from="imu" to="imu/data"/>-->
+<!--&lt;!&ndash;        <remap from="robot_pose_ekf/odom_combined" to="odom"/>&ndash;&gt;-->
+<!--    </node>-->
 
+    <node pkg="robot_localization" type="ekf_localization_node" name="rosbot_ekf" clear_params="true">
+        <rosparam command="load" file="$(find ros_odrive)/params/ekf_params.yaml" />
+        <!--  Placeholder for output topic remapping -->
+<!--        <remap from="odometry/filtered" to="odom"/>-->
+        <!-- <remap from="accel/filtered" to=""/> -->
+
+    </node>
 </launch>
