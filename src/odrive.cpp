@@ -536,7 +536,7 @@ int main(int argc, char **argv) {
     }
 
     //setPID(0.05, 0.1);
-    setPID(0.03, 0.1);
+    setPID(0.03, 0.25);
 
     setRamp(400, 75, is_ramp_enabled);
 
