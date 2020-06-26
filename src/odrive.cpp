@@ -536,9 +536,9 @@ int main(int argc, char **argv) {
     }
 
     //setPID(0.05, 0.1);
-    setPID(0.03, 0.3);
+    setPID(0.03, 0.2);
 
-    setRamp(300, 65, is_ramp_enabled);
+    setRamp(400, 75, is_ramp_enabled);
 
     current_time = ros::Time::now();
     last_time = ros::Time::now();
