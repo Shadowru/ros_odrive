@@ -48,6 +48,8 @@ vector<double> eff(2, 0.0);
 
 float vel_limit = 25;
 
+boolean is_ramp_enabled = true;
+
 void msgCallback(const ros_odrive::odrive_ctrl::ConstPtr &msg) {
     std::string cmd;
     uint8_t u8val;
@@ -321,11 +323,21 @@ void velCallback(const geometry_msgs::Twist &vel) {
         left = vel_limit;
     }
 
-    cmd = "axis1.controller.vel_setpoint";
+    if (is_ramp_enabled){
+        cmd = "axis1.controller.vel_ramp_target";
+    } else {
+        cmd = "axis1.controller.vel_setpoint";
+    };
+
     writeOdriveData(endpoint, odrive_json,
                     cmd, right);
 
-    cmd = "axis0.controller.vel_setpoint";
+    if (is_ramp_enabled){
+        cmd = "axis0.controller.vel_ramp_target";
+    } else {
+        cmd = "axis0.controller.vel_setpoint";
+    };
+
     writeOdriveData(endpoint, odrive_json,
                     cmd, left);
 }
@@ -356,11 +368,19 @@ void odrive_diagnostics(diagnostic_updater::DiagnosticStatusWrapper &stat) {
 void stopMotor(){
     std::string cmd;
     float fval = 0.0;
-    cmd = "axis1.controller.vel_setpoint";
+    if (is_ramp_enabled){
+        cmd = "axis1.controller.vel_ramp_target";
+    } else {
+        cmd = "axis1.controller.vel_setpoint";
+    };
     writeOdriveData(endpoint, odrive_json,
                     cmd, fval);
 
-    cmd = "axis0.controller.vel_setpoint";
+    if (is_ramp_enabled){
+        cmd = "axis0.controller.vel_ramp_target";
+    } else {
+        cmd = "axis0.controller.vel_setpoint";
+    };
     writeOdriveData(endpoint, odrive_json,
                     cmd, fval);
 }
@@ -371,7 +391,7 @@ void updateWatchDog(){
     execOdriveFunc(endpoint, odrive_json, "axis1.watchdog_feed");
 }
 
-void setPID(float p, float i){
+void setPID(const float p,const float i){
 
     writeOdriveData(endpoint, odrive_json,
                     "axis0.controller.config.vel_gain", p);
@@ -388,6 +408,27 @@ void setPID(float p, float i){
                     "axis0.controller.config.vel_limit", vel_limit_odrive);
     writeOdriveData(endpoint, odrive_json,
                     "axis1.controller.config.vel_limit", vel_limit_odrive);
+}
+
+void setRamp(const float ramp_rate, const float current_control_bandwidth, const bool vel_ramp_enable){
+
+    float set_ramp_rate = ramp_rate;
+    writeOdriveData(endpoint, odrive_json,
+        "axis0.controller.config.vel_ramp_rate", set_ramp_rate);
+    writeOdriveData(endpoint, odrive_json,
+        "axis1.controller.config.vel_ramp_rate", set_ramp_rate);
+
+    float set_current_control_bandwidth = current_control_bandwidth;
+    writeOdriveData(endpoint, odrive_json,
+        "axis0.motor.config.current_control_bandwidth", set_current_control_bandwidth);
+    writeOdriveData(endpoint, odrive_json,
+        "axis1.motor.config.current_control_bandwidth", set_current_control_bandwidth);
+
+    bool set_vel_ramp_enable = vel_ramp_enable;
+    writeOdriveData(endpoint, odrive_json,
+        "axis0.controller.vel_ramp_enable", set_vel_ramp_enable);
+    writeOdriveData(endpoint, odrive_json,
+        "axis1.controller.vel_ramp_enable", set_vel_ramp_enable);
 }
 
 void initWheel(){
@@ -493,6 +534,8 @@ int main(int argc, char **argv) {
 
     //setPID(0.05, 0.1);
     setPID(0.03, 0.3);
+
+    setRamp(300, 65, is_ramp_enabled);
 
     current_time = ros::Time::now();
     last_time = ros::Time::now();
