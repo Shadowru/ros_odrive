@@ -17,4 +17,7 @@
     <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch" >
         <arg name="port" value="9090"/>
     </include>
+
+    <include file="$(find ros_odrive)/launch/webui.launch"/>
+
 </launch>
