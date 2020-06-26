@@ -393,15 +393,18 @@ void updateWatchDog(){
 
 void setPID(const float p,const float i){
 
-    writeOdriveData(endpoint, odrive_json,
-                    "axis0.controller.config.vel_gain", p);
-    writeOdriveData(endpoint, odrive_json,
-                    "axis0.controller.config.vel_integrator_gain", i);
+    float set_P = p;
+    float set_I = i;
 
     writeOdriveData(endpoint, odrive_json,
-                    "axis1.controller.config.vel_gain", p);
+                    "axis0.controller.config.vel_gain", set_P);
     writeOdriveData(endpoint, odrive_json,
-                    "axis1.controller.config.vel_integrator_gain", i);
+                    "axis0.controller.config.vel_integrator_gain", set_I);
+
+    writeOdriveData(endpoint, odrive_json,
+                    "axis1.controller.config.vel_gain", set_P);
+    writeOdriveData(endpoint, odrive_json,
+                    "axis1.controller.config.vel_integrator_gain", set_I);
 
     float vel_limit_odrive = 120;//vel_limit * 2;
     writeOdriveData(endpoint, odrive_json,
