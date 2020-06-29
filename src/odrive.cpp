@@ -48,7 +48,7 @@ vector<double> eff(2, 0.0);
 
 float vel_limit = 30;
 
-const bool is_ramp_enabled = false;
+const bool is_ramp_enabled = true;
 
 void msgCallback(const ros_odrive::odrive_ctrl::ConstPtr &msg) {
     std::string cmd;
