@@ -545,7 +545,12 @@ int main(int argc, char **argv) {
 
     setPID(p_vel, i_vel);
 
-    setRamp(1500, 95, is_ramp_enabled);
+
+    float ramp_rate = 0.0;
+    nh.param<float>("ramp_rate", ramp_rate, 400);
+    nh.param<bool>("ramp_enabled", is_ramp_enabled, true);
+
+    setRamp(ramp_rate, 95, is_ramp_enabled);
 
     current_time = ros::Time::now();
     last_time = ros::Time::now();

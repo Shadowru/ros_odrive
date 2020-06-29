@@ -8,6 +8,8 @@
         <param name="vel_P" value="0.01"/>
         <param name="vel_I" value="0.01"/>
         <param name="vel_limit" value="60.0"/>
+        <param name="ramp_rate" value="1200"/>
+        <param name="ramp_enabled" value="true"/>
         <!--    <remap from="ros_odrive/odom" to="odom"/>-->
     </node>
 
