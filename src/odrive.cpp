@@ -538,8 +538,10 @@ int main(int argc, char **argv) {
     float p_vel = 0.0;
     float i_vel = 0.0;
 
-    nh.param<float>("P_vel", p_vel, 0.03);
-    nh.param<float>("I_vel", i_vel, 0.01);
+    nh.param<float>("vel_P", p_vel, 0.03);
+    nh.param<float>("vel_I", i_vel, 0.01);
+
+    nh.param<float>("vel_limit", i_vel, 40);
 
     setPID(p_vel, i_vel);
 
