@@ -46,7 +46,7 @@ vector<double> eff(2, 0.0);
 
 #define ODOM_COV 0.005
 
-float vel_limit = 25;
+float vel_limit = 30;
 
 const bool is_ramp_enabled = false;
 
