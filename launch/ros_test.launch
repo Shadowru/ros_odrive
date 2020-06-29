@@ -5,8 +5,8 @@
     <node name="ros_odrive" pkg="ros_odrive" type="ros_odrive" required="true" output="screen">
         <param name="rate" value="10"/>
         <param name="od_sn" value="0x335831593536"/>
-        <param name="vel_P" value="0.01"/>
-        <param name="vel_I" value="0.025"/>
+        <param name="vel_P" value="0.05"/>
+        <param name="vel_I" value="0.0"/>
         <param name="vel_limit" value="40.0"/>
         <param name="ramp_rate" value="400"/>
         <param name="ramp_enabled" value="false"/>
