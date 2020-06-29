@@ -541,7 +541,7 @@ int main(int argc, char **argv) {
     nh.param<float>("vel_P", p_vel, 0.03);
     nh.param<float>("vel_I", i_vel, 0.01);
 
-    nh.param<float>("vel_limit", i_vel, 40);
+    nh.param<float>("vel_limit", vel_limit, 40);
 
     setPID(p_vel, i_vel);
 
