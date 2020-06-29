@@ -48,7 +48,7 @@ vector<double> eff(2, 0.0);
 
 float vel_limit = 25;
 
-bool is_ramp_enabled = true;
+const bool is_ramp_enabled = false;
 
 void msgCallback(const ros_odrive::odrive_ctrl::ConstPtr &msg) {
     std::string cmd;
@@ -535,9 +535,13 @@ int main(int argc, char **argv) {
         updateTargetConfig(endpoint, odrive_json, od_cfg);
     }
 
-    //setPID(0.05, 0.1);
-    //setPID(0.03, 0.25);
-    setPID(0.005, 0.0);
+    float p_vel = 0.0;
+    float i_vel = 0.0;
+
+    nh.param<float>("P_vel", p_vel, 0.03);
+    nh.param<float>("I_vel", i_vel, 0.01);
+
+    setPID(p_vel, i_vel);
 
     setRamp(1500, 95, is_ramp_enabled);
 
